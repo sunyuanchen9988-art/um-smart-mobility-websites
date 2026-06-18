@@ -1,0 +1,4436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UM Project | TerraNexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --deep: #00506b;
+      --deep-2: #063846;
+      --deep-3: #08242b;
+      --copper: #b87c57;
+      --copper-2: #d39a75;
+      --sand: #eeece8;
+      --paper: #fbfaf7;
+      --ink: #2c2c2c;
+      --muted: #687174;
+      --line: rgba(44, 44, 44, 0.14);
+      --white: #ffffff;
+      --max: 1328px;
+      --gutter: clamp(20px, 3.9vw, 56px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--sand);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      letter-spacing: 0;
+    }
+
+    body.locked {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 38px var(--gutter) 24px;
+      color: var(--white);
+      transition: background 220ms ease, padding 220ms ease, box-shadow 220ms ease;
+    }
+
+    .site-header.scrolled,
+    .site-header.menu-open {
+      padding-top: 18px;
+      padding-bottom: 18px;
+      background: rgba(0, 80, 107, 0.94);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: clamp(182px, 16vw, 238px);
+      height: 58px;
+      line-height: 1;
+    }
+
+    .brand-logo {
+      width: clamp(182px, 16vw, 238px);
+      height: auto;
+      display: block;
+      overflow: visible;
+      opacity: 0.98;
+      transform: translateY(1px);
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(18px, 1.8vw, 32px);
+      margin-left: auto;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      position: relative;
+      padding: 8px 0;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.96;
+    }
+
+    .nav-link.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--white);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: -22px;
+      z-index: 999;
+      min-width: 286px;
+      padding: 16px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .dropdown::before {
+      content: "";
+      position: absolute;
+      top: -18px;
+      left: 0;
+      right: 0;
+      height: 18px;
+    }
+
+    .dropdown a {
+      position: relative;
+      z-index: 2;
+      display: block;
+      padding: 9px 8px;
+      border-bottom: 1px solid rgba(0, 80, 107, 0.12);
+      font-size: 13px;
+      color: var(--deep);
+    }
+
+    .nav-item:hover .dropdown,
+    .nav-item:focus-within .dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-button {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      border-radius: 50%;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 44px;
+      padding: 0 18px 0 22px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--white);
+      background: var(--copper-2);
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 9px 20px rgba(55, 33, 22, 0.14);
+    }
+
+    .pill.secondary {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.14);
+      outline: 1px solid rgba(255, 255, 255, 0.32);
+      box-shadow: none;
+    }
+
+    .icon-round {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      color: var(--copper);
+      background: var(--white);
+      flex: 0 0 auto;
+    }
+
+    .menu-toggle {
+      display: none;
+    }
+
+    .container {
+      width: min(100% - (var(--gutter) * 2), var(--max));
+      margin: 0 auto;
+    }
+
+    .section {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-hero {
+      min-height: 640px;
+      color: var(--white);
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.82), rgba(0, 80, 107, 0.38)),
+        linear-gradient(0deg, rgba(0, 32, 43, 0.56), rgba(0, 0, 0, 0.06)),
+        url("../assets/um-project/active-mobility-campus.jpg") center / cover;
+    }
+
+    .project-hero .container {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.54fr);
+      gap: clamp(42px, 7vw, 96px);
+      align-items: end;
+      min-height: 640px;
+      padding: 150px 0 76px;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--copper-2);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .project-hero h1 {
+      margin: 0;
+      max-width: 900px;
+      color: var(--white);
+      font-size: clamp(46px, 5.4vw, 86px);
+      line-height: 0.98;
+      font-weight: 700;
+    }
+
+    .hero-panel {
+      padding-left: 34px;
+      border-left: 1px solid rgba(255, 255, 255, 0.72);
+    }
+
+    .hero-panel p {
+      margin: 0 0 22px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .page-band {
+      position: relative;
+      padding: clamp(72px, 7vw, 112px) 0;
+      background: var(--sand);
+      scroll-margin-top: 110px;
+    }
+
+    .anchor-alias {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+      scroll-margin-top: 110px;
+    }
+
+    .page-band.dark {
+      color: var(--white);
+      background: var(--deep);
+    }
+
+    .page-band.paper {
+      background: var(--paper);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.48fr) minmax(0, 0.82fr);
+      gap: clamp(34px, 6vw, 82px);
+      align-items: end;
+      margin-bottom: 38px;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(30px, 3.5vw, 50px);
+      line-height: 1.08;
+      font-weight: 700;
+    }
+
+    .dark .section-title,
+    .dark .section-head p {
+      color: var(--white);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .section-head .section-subtitle {
+      margin: 12px 0 0;
+      color: var(--copper);
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .dark .section-head .section-subtitle {
+      color: var(--copper-2);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card-grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card-grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .commercial-dashboard {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .commercial-card {
+      min-height: 300px;
+      padding: clamp(24px, 2vw, 32px);
+      border-top: 3px solid var(--copper);
+      background: var(--white);
+    }
+
+    .commercial-card h3 {
+      margin: 0 0 24px;
+      color: var(--deep);
+      font-size: clamp(20px, 1.35vw, 24px);
+      line-height: 1.14;
+    }
+
+    .commercial-card-body {
+      display: grid;
+      grid-template-columns: max-content minmax(0, 1fr);
+      gap: clamp(18px, 2vw, 28px);
+      align-items: start;
+    }
+
+    .commercial-number {
+      color: var(--copper);
+      font-size: clamp(42px, 3vw, 56px);
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .commercial-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(14px, 0.96vw, 16px);
+      line-height: 1.55;
+    }
+
+    .outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .outcome-card {
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 26px;
+      border-top: 3px solid var(--copper);
+      background: var(--paper);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .outcome-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.12);
+    }
+
+    .outcome-marker {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(184, 124, 87, 0.36);
+      color: var(--copper);
+      background: rgba(184, 124, 87, 0.1);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .outcome-card h3 {
+      margin: 0 0 12px;
+      color: var(--deep);
+      font-size: 21px;
+      line-height: 1.16;
+    }
+
+    .outcome-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .outcome-highlight {
+      color: var(--copper);
+      font-weight: 700;
+    }
+
+    .info-card,
+    .metric-card,
+    .wide-card,
+    .outline-card {
+      min-height: 160px;
+      padding: 24px;
+      border-top: 3px solid var(--copper);
+      background: var(--paper);
+    }
+
+    .dark .info-card,
+    .dark .metric-card,
+    .dark .wide-card,
+    .dark .outline-card {
+      color: var(--ink);
+      background: var(--white);
+    }
+
+    .metric-card {
+      min-height: 132px;
+    }
+
+    .info-card h3,
+    .metric-card h3,
+    .wide-card h3,
+    .outline-card h3 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 21px;
+      line-height: 1.16;
+    }
+
+    .info-card p,
+    .metric-card p,
+    .wide-card p,
+    .outline-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .split-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(320px, 0.62fr);
+      gap: clamp(28px, 5vw, 72px);
+      align-items: stretch;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .visual-block {
+      min-height: 420px;
+      padding: 28px;
+      color: var(--white);
+      background:
+        linear-gradient(0deg, rgba(0, 43, 57, 0.84), rgba(0, 80, 107, 0.18)),
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1300&q=85") center / cover;
+      display: grid;
+      align-content: end;
+    }
+
+    .visual-block.mobility-concept {
+      min-height: 470px;
+      margin-top: 28px;
+      background:
+        linear-gradient(0deg, rgba(0, 43, 57, 0.88), rgba(0, 80, 107, 0.2)),
+        url("https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1300&q=85") center / cover;
+    }
+
+    .visual-block h3 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.12;
+    }
+
+    .visual-block p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .timeline {
+      display: grid;
+      border-top: 1px solid var(--line);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      gap: clamp(22px, 4vw, 56px);
+      padding: 26px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .timeline-item span {
+      color: var(--copper);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .timeline-item h3 {
+      margin: 0 0 8px;
+      color: var(--deep);
+      font-size: 24px;
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .solution-board {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .solution-feature {
+      min-height: 520px;
+      padding: 32px;
+      color: var(--white);
+      background:
+        linear-gradient(0deg, rgba(0, 41, 54, 0.88), rgba(0, 80, 107, 0.26)),
+        url("https://images.unsplash.com/photo-1494522855154-9297ac14b55f?auto=format&fit=crop&w=1200&q=85") center / cover;
+      display: grid;
+      align-content: end;
+    }
+
+    .solution-feature h3 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.08;
+    }
+
+    .solution-feature p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .solution-feature.overview {
+      min-height: 320px;
+      margin-bottom: 18px;
+    }
+
+    .solution-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .layer-card--interactive {
+      position: relative;
+      overflow: hidden;
+      min-height: 310px;
+      cursor: default;
+      transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    }
+
+    .layer-card--interactive.active {
+      border-top-color: var(--deep);
+      box-shadow: 0 18px 42px rgba(0, 80, 107, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .layer-card-front {
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .layer-card-back {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      color: var(--white);
+      background: var(--deep);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .layer-card--interactive:hover .layer-card-front,
+    .layer-card--interactive:focus-within .layer-card-front,
+    .layer-card--interactive.is-flipped .layer-card-front {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+    }
+
+    .layer-card--interactive:hover .layer-card-back,
+    .layer-card--interactive:focus-within .layer-card-back,
+    .layer-card--interactive.is-flipped .layer-card-back {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .layer-card-back h3 {
+      margin: 0 0 12px;
+      color: var(--white);
+      font-size: 21px;
+      line-height: 1.16;
+    }
+
+    .layer-card-back ul {
+      display: grid;
+      gap: 7px;
+      margin: 0 0 20px;
+      padding: 0 0 0 18px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 14px;
+      line-height: 1.42;
+    }
+
+    .layer-detail-button,
+    .detail-panel-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 0;
+      color: var(--deep);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .layer-detail-button {
+      width: fit-content;
+      margin-top: auto;
+    }
+
+    .detail-panel-button {
+      color: var(--white);
+      background: var(--deep);
+    }
+
+    .detail-panel-button.secondary {
+      color: var(--deep);
+      background: rgba(0, 80, 107, 0.1);
+    }
+
+    .detail-panel-button:disabled {
+      color: rgba(0, 80, 107, 0.46);
+      background: rgba(0, 80, 107, 0.08);
+      cursor: not-allowed;
+    }
+
+    .mobility-detail-panel {
+      display: none;
+      margin-top: 28px;
+      padding: clamp(24px, 4vw, 42px);
+      border-top: 3px solid var(--copper);
+      background: var(--white);
+      box-shadow: 0 22px 58px rgba(0, 0, 0, 0.08);
+      scroll-margin-top: 110px;
+    }
+
+    .mobility-detail-panel.is-visible {
+      display: block;
+    }
+
+    .detail-panel-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.82fr);
+      gap: clamp(20px, 4vw, 60px);
+      align-items: end;
+      margin-bottom: 30px;
+    }
+
+    .detail-panel-head h3 {
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.08;
+    }
+
+    .detail-panel-head p,
+    .detail-copy p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .detail-panel-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .detail-copy {
+      display: grid;
+      gap: 16px;
+    }
+
+    .detail-copy-block p + p {
+      margin-top: 12px;
+    }
+
+    .detail-copy-block {
+      padding: 20px;
+      background: var(--paper);
+      border-left: 3px solid var(--copper);
+    }
+
+    .detail-copy-block h4,
+    .detail-table-block h4,
+    .detail-bottom h4 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .detail-table-stack {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .detail-table-block,
+    .detail-bottom-card,
+    .detail-panel-layout > * {
+      min-width: 0;
+    }
+
+    .detail-table-wrap {
+      overflow-x: auto;
+      max-width: 100%;
+      border: 1px solid rgba(0, 80, 107, 0.14);
+      background: var(--paper);
+    }
+
+    .detail-table {
+      width: 100%;
+      min-width: 520px;
+      border-collapse: collapse;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .detail-table th,
+    .detail-table td {
+      padding: 13px 14px;
+      border-bottom: 1px solid rgba(0, 80, 107, 0.12);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .detail-table th {
+      color: var(--deep);
+      background: rgba(0, 80, 107, 0.08);
+      font-weight: 700;
+    }
+
+    .detail-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .detail-bottom {
+      display: grid;
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .detail-bottom-card {
+      padding: 20px;
+      background: var(--paper);
+      border-left: 3px solid var(--copper);
+    }
+
+    .detail-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 18px;
+      background: var(--paper);
+      border: 1px solid rgba(0, 80, 107, 0.14);
+    }
+
+    .detail-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      color: var(--deep);
+      background: rgba(0, 80, 107, 0.08);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-panel-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .matrix-cell {
+      min-height: 150px;
+      padding: 22px;
+      color: var(--white);
+      background: rgba(8, 36, 43, 0.54);
+    }
+
+    .matrix-cell h3 {
+      margin: 0 0 10px;
+      color: var(--white);
+      font-size: 20px;
+    }
+
+    .matrix-cell p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .subsection-label {
+      margin: 42px 0 18px;
+      color: var(--copper-2);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pm-framework-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .pm-framework-card,
+    .control-card {
+      min-height: 230px;
+      padding: 24px;
+      color: var(--ink);
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+    }
+
+    .pm-framework-card h3,
+    .control-card h3 {
+      margin: 0 0 12px;
+      color: var(--deep);
+      font-size: 21px;
+      line-height: 1.16;
+    }
+
+    .pm-framework-card p,
+    .control-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .key-function {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(0, 80, 107, 0.12);
+    }
+
+    .key-function span {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .pmis-dashboard {
+      margin-top: 28px;
+      padding: 30px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+      border-top: 3px solid var(--copper);
+    }
+
+    .pmis-dashboard h3 {
+      margin: 0 0 10px;
+      color: var(--white);
+      font-size: 26px;
+      line-height: 1.14;
+    }
+
+    .pmis-dashboard p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .monitoring-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin: 24px 0;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .monitoring-chip {
+      min-height: 72px;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      color: var(--deep);
+      background: var(--white);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .framework-timeline {
+      margin-top: 28px;
+      padding: 28px;
+      border-top: 3px solid var(--copper);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .framework-timeline h3 {
+      margin: 0 0 20px;
+      color: var(--white);
+      font-size: 24px;
+      line-height: 1.16;
+    }
+
+    .framework-timeline > p {
+      margin: -8px 0 22px;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .phase-card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .phase-card {
+      min-height: 100%;
+      padding: 24px;
+      color: var(--ink);
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+    }
+
+    .phase-field {
+      padding-top: 14px;
+      margin-top: 14px;
+      border-top: 1px solid rgba(0, 80, 107, 0.12);
+    }
+
+    .phase-field:first-child {
+      padding-top: 0;
+      margin-top: 0;
+      border-top: 0;
+    }
+
+    .phase-field span {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .phase-field p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .phase-field:first-child p {
+      color: var(--deep);
+      font-size: 19px;
+      font-weight: 700;
+      line-height: 1.16;
+    }
+
+    .metric-strip {
+      color: var(--white);
+      background: var(--deep-3);
+    }
+
+    .metric-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .scale-metric {
+      min-height: 128px;
+      display: grid;
+      align-content: center;
+      padding: 22px;
+      background: rgba(0, 80, 107, 0.62);
+    }
+
+    .scale-metric strong {
+      color: var(--copper-2);
+      font-size: clamp(30px, 3vw, 48px);
+      line-height: 1;
+    }
+
+    .scale-metric span {
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.78);
+      font-weight: 700;
+      line-height: 1.24;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .dashboard-tile,
+    .doc-card,
+    .adaptation-card,
+    .pm-module,
+    .outcome-tile,
+    .client-block {
+      border-top: 3px solid var(--copper);
+      background: var(--white);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.05);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .dashboard-tile:hover,
+    .doc-card:hover,
+    .adaptation-card:hover,
+    .pm-module:hover,
+    .outcome-tile:hover,
+    .client-block:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 52px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-tile {
+      min-height: 170px;
+      padding: 22px;
+    }
+
+    .dashboard-tile h3,
+    .doc-card h3,
+    .adaptation-card h3,
+    .pm-module h3,
+    .outcome-tile h3,
+    .client-block h3 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 21px;
+      line-height: 1.16;
+    }
+
+    .dashboard-tile p,
+    .doc-card p,
+    .adaptation-card p,
+    .pm-module p,
+    .outcome-tile p,
+    .client-block p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .concept-panel {
+      min-height: 520px;
+      display: grid;
+      align-content: end;
+      padding: 32px;
+      color: var(--white);
+      background:
+        linear-gradient(0deg, rgba(0, 41, 54, 0.9), rgba(0, 80, 107, 0.22)),
+        url("https://images.unsplash.com/photo-1494522855154-9297ac14b55f?auto=format&fit=crop&w=1400&q=85") center / cover;
+    }
+
+    .concept-panel h3 {
+      margin: 0 0 16px;
+      color: var(--white);
+      font-size: clamp(28px, 2.8vw, 42px);
+      line-height: 1.08;
+    }
+
+    .visual-tags,
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .visual-tags span,
+    .tag,
+    .mini-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      color: var(--white);
+      background: rgba(184, 124, 87, 0.84);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .challenge-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.72fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .challenge-map,
+    .pestel-panel,
+    .control-room,
+    .client-request-panel {
+      padding: clamp(24px, 3vw, 34px);
+      color: var(--white);
+      background: rgba(8, 36, 43, 0.72);
+      border-top: 3px solid var(--copper-2);
+    }
+
+    .challenge-map h3,
+    .pestel-panel h3,
+    .control-room h3 {
+      margin: 0 0 20px;
+      color: var(--white);
+      font-size: 26px;
+      line-height: 1.12;
+    }
+
+    .issue-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .issue-node,
+    .pestel-card {
+      min-height: 150px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .issue-node:hover,
+    .pestel-card:hover {
+      transform: translateY(-3px);
+      background: rgba(184, 124, 87, 0.46);
+    }
+
+    .issue-node.issue-node--image {
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.86), rgba(0, 80, 107, 0.62) 52%, rgba(0, 80, 107, 0.34)),
+        linear-gradient(0deg, rgba(0, 32, 43, 0.36), rgba(0, 0, 0, 0.06)),
+        var(--issue-image) center / cover;
+    }
+
+    .issue-node.issue-node--image:hover {
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.78), rgba(0, 80, 107, 0.54) 52%, rgba(184, 124, 87, 0.28)),
+        linear-gradient(0deg, rgba(0, 32, 43, 0.34), rgba(0, 0, 0, 0.04)),
+        var(--issue-image) center / cover;
+    }
+
+    .pestel-card.pestel-card--image {
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.84), rgba(0, 80, 107, 0.54) 52%, rgba(0, 80, 107, 0.22)),
+        linear-gradient(0deg, rgba(0, 32, 43, 0.38), rgba(0, 0, 0, 0.04)),
+        var(--pestel-image) center / cover;
+    }
+
+    .pestel-card.pestel-card--image:hover {
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.76), rgba(0, 80, 107, 0.48) 52%, rgba(184, 124, 87, 0.2)),
+        linear-gradient(0deg, rgba(0, 32, 43, 0.34), rgba(0, 0, 0, 0.04)),
+        var(--pestel-image) center / cover;
+    }
+
+    .issue-node h4,
+    .pestel-card h4 {
+      margin: 0 0 8px;
+      color: var(--white);
+      font-size: 17px;
+      line-height: 1.18;
+    }
+
+    .issue-node p,
+    .pestel-card p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 13.5px;
+      line-height: 1.45;
+    }
+
+    .issue-node.issue-node--image h4,
+    .issue-node.issue-node--image p,
+    .pestel-card.pestel-card--image h4,
+    .pestel-card.pestel-card--image p {
+      text-shadow: 0 2px 10px rgba(0, 32, 43, 0.56);
+    }
+
+    .pestel-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .doc-grid,
+    .adaptation-grid,
+    .outcome-tile-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .doc-card,
+    .adaptation-card,
+    .outcome-tile,
+    .client-block {
+      padding: 24px;
+    }
+
+    .doc-card {
+      min-height: 230px;
+    }
+
+    .tag {
+      margin-top: 18px;
+      color: var(--white);
+      background: var(--deep);
+    }
+
+    .adaptation-statement {
+      margin: 0 0 24px;
+      padding: 22px 24px;
+      color: var(--white);
+      background: var(--deep);
+      border-left: 4px solid var(--copper-2);
+      font-weight: 700;
+    }
+
+    .lesson-block {
+      padding-top: 16px;
+      margin-top: 16px;
+      border-top: 1px solid rgba(0, 80, 107, 0.14);
+    }
+
+    .lesson-block span {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .solution-feature.overview {
+      display: grid;
+      grid-template-columns: minmax(0, 0.82fr) minmax(280px, 0.42fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    .pm-module-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .pm-module {
+      padding: clamp(24px, 3vw, 34px);
+    }
+
+    .standards-stack,
+    .hybrid-grid,
+    .pmis-tile-grid {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .standards-stack {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .standard-layer,
+    .hybrid-card,
+    .pmis-tile {
+      padding: 18px;
+      background: var(--paper);
+      border-left: 3px solid var(--copper);
+    }
+
+    .standard-layer strong,
+    .hybrid-card strong,
+    .pmis-tile strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--deep);
+      font-size: 17px;
+      line-height: 1.16;
+    }
+
+    .hybrid-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .pmis-tile-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .implementation-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .timeline-phase {
+      padding: 20px;
+      color: var(--white);
+      background: var(--deep);
+      border-top: 3px solid var(--copper-2);
+    }
+
+    .phase-date,
+    .phase-kpi,
+    .status-tag,
+    .commercial-tag,
+    .outcome-highlight-line {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 30px;
+      padding: 0 10px;
+      color: var(--white);
+      background: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .timeline-phase h4 {
+      margin: 14px 0 10px;
+      color: var(--white);
+      font-size: 19px;
+      line-height: 1.16;
+    }
+
+    .timeline-phase p,
+    .timeline-phase li {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 13.5px;
+      line-height: 1.45;
+    }
+
+    .timeline-phase ul {
+      margin: 0 0 14px;
+      padding-left: 18px;
+    }
+
+    .control-room {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .control-column {
+      min-height: 320px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .control-column h3 {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    .control-column ul {
+      display: grid;
+      gap: 9px;
+      margin: 18px 0 0;
+      padding-left: 18px;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .commercial-card {
+      position: relative;
+    }
+
+    .commercial-tag {
+      margin-bottom: 18px;
+      background: var(--deep);
+    }
+
+    .comparison-bar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 22px;
+      color: var(--white);
+      background: var(--deep);
+    }
+
+    .comparison-bar div {
+      padding: 18px;
+      background: rgba(0, 80, 107, 0.82);
+    }
+
+    .comparison-bar span {
+      display: block;
+      color: rgba(255, 255, 255, 0.74);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .comparison-bar strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 28px;
+      line-height: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .commercial-value-board {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .commercial-main-value-card {
+      grid-column: span 6;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(30px, 4vw, 48px);
+      color: var(--white);
+      background:
+        linear-gradient(0deg, rgba(0, 24, 32, 0.96), rgba(0, 80, 107, 0.48) 62%, rgba(0, 0, 0, 0.12)),
+        url("https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1400&q=85") center / cover;
+      box-shadow: 0 24px 60px rgba(0, 80, 107, 0.16);
+    }
+
+    .commercial-support-stack {
+      grid-column: span 6;
+      display: grid;
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      min-height: 560px;
+    }
+
+    .commercial-support-card {
+      min-height: 0;
+      display: grid;
+      align-content: center;
+      padding: clamp(22px, 2.4vw, 32px);
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.05);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .commercial-support-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 52px rgba(0, 80, 107, 0.11);
+    }
+
+    .commercial-board-tag {
+      width: fit-content;
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 0 10px;
+      color: var(--white);
+      background: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .commercial-main-value-card .commercial-board-tag {
+      background: rgba(211, 154, 117, 0.92);
+    }
+
+    .commercial-value-number {
+      color: var(--copper);
+      font-size: clamp(48px, 5vw, 86px);
+      font-weight: 700;
+      line-height: 0.94;
+      overflow-wrap: anywhere;
+    }
+
+    .commercial-main-value-card .commercial-value-number {
+      color: var(--copper-2);
+      font-size: clamp(64px, 7vw, 112px);
+    }
+
+    .commercial-main-value-card h3,
+    .commercial-support-card h3 {
+      margin: 16px 0 10px;
+      color: var(--deep);
+      font-size: clamp(22px, 1.8vw, 30px);
+      line-height: 1.08;
+    }
+
+    .commercial-main-value-card h3 {
+      color: var(--white);
+      font-size: clamp(30px, 3vw, 46px);
+    }
+
+    .commercial-main-value-card p,
+    .commercial-support-card p {
+      margin: 0;
+      max-width: 560px;
+      color: var(--muted);
+      font-size: 15.5px;
+      line-height: 1.48;
+    }
+
+    .commercial-main-value-card p {
+      color: rgba(255, 255, 255, 0.84);
+      font-size: clamp(16px, 1.1vw, 18px);
+    }
+
+    .tco-comparison-board {
+      grid-column: 1 / -1;
+      margin-top: 4px;
+      padding: clamp(22px, 2.6vw, 30px);
+      background: var(--deep);
+      color: var(--white);
+      border-left: 4px solid var(--copper-2);
+    }
+
+    .tco-comparison-board h3 {
+      margin: 0 0 18px;
+      color: var(--white);
+      font-size: clamp(22px, 1.8vw, 30px);
+      line-height: 1.1;
+    }
+
+    .tco-comparison-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .tco-step {
+      min-height: 112px;
+      display: grid;
+      align-content: center;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .tco-step.highlight {
+      background: var(--copper);
+    }
+
+    .tco-step span {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .tco-step strong {
+      margin-top: 8px;
+      color: var(--white);
+      font-size: clamp(28px, 3vw, 44px);
+      line-height: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .tco-arrow {
+      display: grid;
+      place-items: center;
+      color: var(--copper-2);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .outcome-tile-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .outcome-number {
+      color: var(--copper);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .outcome-highlight-line {
+      margin: 16px 0 14px;
+      background: rgba(0, 80, 107, 0.12);
+      color: var(--deep);
+    }
+
+    .client-request-panel {
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.94), rgba(0, 80, 107, 0.76)),
+        url("https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1800&q=85") center / cover;
+    }
+
+    .client-block-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .cta-band {
+      color: var(--white);
+      background: var(--deep);
+    }
+
+    .cta-band .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      min-height: 170px;
+      padding: 38px 0;
+    }
+
+    .cta-copy {
+      max-width: 760px;
+    }
+
+    .cta-copy h2 {
+      margin: 0;
+      font-size: clamp(28px, 2.6vw, 42px);
+      line-height: 1.12;
+    }
+
+    .cta-copy p {
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .site-footer {
+      color: rgba(255, 255, 255, 0.84);
+      background: var(--deep-3);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.35fr repeat(5, minmax(120px, 1fr));
+      gap: 30px;
+      padding: 72px 0 54px;
+    }
+
+    .footer-brand {
+      color: var(--white);
+      max-width: 280px;
+    }
+
+    .footer-name {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(26px, 2.4vw, 36px);
+      line-height: 1.08;
+      font-weight: 700;
+    }
+
+    .footer-brand p {
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .footer-col h4 {
+      margin: 0 0 18px;
+      color: var(--white);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .footer-col a,
+    .footer-col span {
+      display: block;
+      margin: 0 0 10px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 22px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 13px;
+    }
+
+    .overlay {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: none;
+      background: rgba(4, 22, 28, 0.62);
+      backdrop-filter: blur(6px);
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .side-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(100%, 560px);
+      min-height: 100%;
+      padding: 78px clamp(24px, 4vw, 54px);
+      color: var(--ink);
+      background: var(--paper);
+      box-shadow: -18px 0 54px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      animation: slideIn 240ms ease forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--deep-3);
+    }
+
+    .panel-title {
+      margin: 0 0 12px;
+      color: var(--deep);
+      font-size: 34px;
+      line-height: 1.15;
+    }
+
+    .panel-copy {
+      margin: 0 0 28px;
+      color: var(--muted);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-grid input,
+    .form-grid textarea {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 16px;
+      border: 1px solid rgba(0, 80, 107, 0.18);
+      border-radius: 0;
+      color: var(--ink);
+      background: var(--white);
+    }
+
+    .form-grid textarea {
+      min-height: 118px;
+      padding-top: 14px;
+      resize: vertical;
+    }
+
+    .human-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .search-panel {
+      width: min(100% - 40px, 900px);
+      margin: 16vh auto 0;
+      padding: clamp(30px, 5vw, 58px);
+      color: var(--white);
+      background: var(--deep);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .search-panel label {
+      display: block;
+      margin-bottom: 18px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .search-panel input {
+      width: 100%;
+      min-height: 70px;
+      padding: 0 18px;
+      border: 0;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      font-size: clamp(24px, 4vw, 52px);
+      font-weight: 700;
+      outline: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    @media (max-width: 1240px) {
+      .footer-top {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .commercial-card-body {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .commercial-number {
+        font-size: clamp(38px, 5vw, 50px);
+      }
+    }
+
+    @media (max-width: 1120px) {
+      .metric-strip-grid,
+      .dashboard-grid,
+      .standards-stack {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .doc-grid,
+      .adaptation-grid,
+      .pmis-tile-grid,
+      .implementation-timeline,
+      .outcome-tile-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .challenge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pm-framework-grid,
+      .control-grid,
+      .phase-card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .outcome-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .main-nav,
+      .header-actions .pill {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: inline-grid;
+      }
+
+      .main-nav.open {
+        position: fixed;
+        top: 84px;
+        left: var(--gutter);
+        right: var(--gutter);
+        display: grid;
+        gap: 0;
+        padding: 18px;
+        color: var(--ink);
+        background: var(--paper);
+        box-shadow: 0 22px 54px rgba(0, 0, 0, 0.2);
+      }
+
+      .main-nav.open .nav-item {
+        border-bottom: 1px solid rgba(0, 80, 107, 0.14);
+      }
+
+      .main-nav.open .nav-link {
+        display: flex;
+        justify-content: space-between;
+        padding: 11px 2px;
+      }
+
+      .main-nav.open .dropdown {
+        position: static;
+        display: block;
+        box-shadow: none;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        padding: 0 0 10px 10px;
+        background: transparent;
+      }
+    }
+
+    @media (max-width: 920px) {
+      :root {
+        --gutter: 16px;
+      }
+
+      .site-header {
+        padding-top: 22px;
+      }
+
+      .brand {
+        min-width: auto;
+      }
+
+      .project-hero,
+      .project-hero .container {
+        min-height: 720px;
+      }
+
+      .project-hero .container,
+      .section-head,
+      .split-layout,
+      .solution-board,
+      .timeline-item,
+      .challenge-layout,
+      .solution-feature.overview,
+      .hybrid-grid,
+      .control-room,
+      .client-block-grid,
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+
+      .project-hero .container {
+        align-content: end;
+        gap: 26px;
+        padding: 130px 0 56px;
+      }
+
+      .hero-panel {
+        padding-left: 18px;
+      }
+
+      .card-grid,
+      .card-grid.three,
+      .card-grid.two,
+      .challenge-grid,
+      .metric-strip-grid,
+      .dashboard-grid,
+      .issue-grid,
+      .doc-grid,
+      .adaptation-grid,
+      .commercial-dashboard,
+      .solution-grid,
+      .matrix,
+      .pm-framework-grid,
+      .monitoring-grid,
+      .control-grid,
+      .outcome-grid,
+      .phase-card-grid,
+      .standards-stack,
+      .pmis-tile-grid,
+      .implementation-timeline,
+      .comparison-bar,
+      .outcome-tile-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .commercial-card-body {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .commercial-card {
+        min-height: 0;
+      }
+
+      .commercial-number {
+        font-size: clamp(36px, 10vw, 48px);
+        overflow-wrap: anywhere;
+      }
+
+      .layer-card--interactive {
+        min-height: 320px;
+      }
+
+      .layer-card--interactive:hover .layer-card-front {
+        opacity: 1;
+        transform: none;
+      }
+
+      .layer-card-back {
+        position: absolute;
+        inset: 0;
+        margin-top: 0;
+        padding: 18px;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(12px);
+      }
+
+      .layer-card--interactive:hover .layer-card-back {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(12px);
+      }
+
+      .layer-card--interactive:focus-within .layer-card-front,
+      .layer-card--interactive.is-flipped .layer-card-front {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      .layer-card--interactive:focus-within .layer-card-back,
+      .layer-card--interactive.is-flipped .layer-card-back {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+
+      .detail-panel-head,
+      .detail-panel-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .solution-feature,
+      .visual-block {
+        min-height: 340px;
+      }
+
+      .cta-band .container,
+      .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-actions {
+        gap: 8px;
+      }
+
+      .brand {
+        min-width: 174px;
+        height: 46px;
+      }
+
+      .brand-logo {
+        width: 174px;
+      }
+
+      .icon-button {
+        width: 38px;
+        height: 38px;
+      }
+
+      .project-hero h1 {
+        font-size: 44px;
+      }
+
+      .metric-strip-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scale-metric,
+      .dashboard-tile,
+      .doc-card,
+      .adaptation-card,
+      .pm-module,
+      .outcome-tile,
+      .client-block {
+        padding: 20px;
+      }
+
+      .concept-panel {
+        min-height: 380px;
+        padding: 22px;
+      }
+
+      .commercial-number {
+        font-size: clamp(34px, 11vw, 44px);
+      }
+    }
+
+    .project-hero {
+      min-height: 680px;
+    }
+
+    .project-hero .container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 34px;
+      align-content: end;
+      align-items: end;
+      min-height: 680px;
+      padding: 150px 0 74px;
+    }
+
+    .project-hero-content {
+      max-width: 920px;
+    }
+
+    .project-hero .hero-subtitle {
+      margin: 20px 0 0;
+      max-width: 720px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: clamp(18px, 1.7vw, 23px);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .project-hero .hero-pitch {
+      margin: 16px 0 0;
+      max-width: 760px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .hero-metrics {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(8, 36, 43, 0.72);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-metrics .metric-strip-grid {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-metrics .scale-metric {
+      min-height: 118px;
+      background: rgba(0, 80, 107, 0.42);
+    }
+
+    .command-dashboard {
+      background: var(--paper);
+    }
+
+    .definition-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      background: rgba(0, 80, 107, 0.14);
+      margin-bottom: 18px;
+    }
+
+    .definition-tile {
+      min-height: 150px;
+      padding: 22px;
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+    }
+
+    .definition-tile span,
+    .evidence-type,
+    .module-kicker {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .definition-tile h3,
+    .command-card h3,
+    .evidence-card h3 {
+      margin: 0;
+      color: var(--deep);
+      font-size: 21px;
+      line-height: 1.16;
+    }
+
+    .command-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .command-card {
+      min-height: 190px;
+      padding: 24px;
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.05);
+    }
+
+    .command-card p,
+    .evidence-card p {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .challenge-stack {
+      display: grid;
+      gap: 34px;
+    }
+
+    .challenge-subhead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .challenge-subhead h3 {
+      margin: 0;
+      color: var(--white);
+      font-size: 26px;
+      line-height: 1.12;
+    }
+
+    .challenge-subhead span {
+      color: var(--copper-2);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .challenge-stack .issue-grid,
+    .challenge-stack .pestel-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .challenge-stack .issue-node,
+    .challenge-stack .pestel-card {
+      min-height: 148px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .challenge-stack .issue-node.issue-node--image {
+      border: 0;
+      box-shadow: 0 16px 34px rgba(0, 32, 43, 0.16);
+      overflow: hidden;
+    }
+
+    .challenge-stack .pestel-card.pestel-card--image {
+      border: 0;
+      box-shadow: 0 16px 34px rgba(0, 32, 43, 0.16);
+      overflow: hidden;
+    }
+
+    .challenge-stack .issue-node h4::first-letter {
+      color: var(--copper-2);
+    }
+
+    .evidence-band {
+      background: var(--sand);
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .evidence-card {
+      min-height: 188px;
+      padding: 22px;
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.05);
+    }
+
+    .evidence-note {
+      margin: 18px 0 0;
+      padding: 18px 22px;
+      color: var(--white);
+      background: var(--deep);
+      border-left: 4px solid var(--copper-2);
+      font-weight: 700;
+    }
+
+    .mobility-mosaic-intro {
+      margin-bottom: 24px;
+      padding: 24px;
+      color: var(--white);
+      background: var(--deep);
+      border-left: 4px solid var(--copper-2);
+    }
+
+    .mobility-mosaic-intro p {
+      margin: 0;
+      max-width: 980px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 16px;
+    }
+
+    .layer-mosaic {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-auto-rows: 168px;
+      gap: 18px;
+    }
+
+    .layer-mosaic .mosaic-layer-card {
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      background: var(--deep-3);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.12);
+      cursor: pointer;
+    }
+
+    .mosaic-layer-card .layer-card-front {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 12px;
+      padding: 24px;
+      color: var(--white);
+      background:
+        linear-gradient(0deg, rgba(0, 24, 32, 0.96), rgba(0, 80, 107, 0.42) 62%, rgba(0, 0, 0, 0.12)),
+        var(--layer-image) center / cover;
+    }
+
+    .mosaic-layer-card .layer-card-front h3 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(22px, 2vw, 32px);
+      line-height: 1.05;
+    }
+
+    .mosaic-layer-card .layer-card-front p {
+      margin: 0;
+      max-width: 460px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      line-height: 1.42;
+    }
+
+    .layer-number {
+      color: var(--copper-2);
+      font-size: clamp(28px, 3vw, 46px);
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .layer-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .layer-tags span,
+    .layer-affordance {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      color: var(--white);
+      background: rgba(184, 124, 87, 0.82);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .layer-affordance {
+      width: fit-content;
+      background: rgba(255, 255, 255, 0.16);
+      outline: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .layer-mosaic .layer-card-back {
+      background: rgba(0, 80, 107, 0.96);
+    }
+
+    .layer-card-01 { grid-column: 1; grid-row: 1 / span 2; }
+    .layer-card-02 { grid-column: 2 / span 2; grid-row: 1; }
+    .layer-card-03 { grid-column: 4 / span 2; grid-row: 1 / span 2; }
+    .layer-card-04 { grid-column: 2 / span 2; grid-row: 2 / span 2; }
+    .layer-card-05 { grid-column: 1; grid-row: 3 / span 2; }
+    .layer-card-06 { grid-column: 4 / span 2; grid-row: 3; }
+    .layer-card-07 { grid-column: 2 / span 2; grid-row: 4; }
+    .layer-card-08 { grid-column: 4 / span 2; grid-row: 4; }
+
+    .delivery-control {
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(8, 36, 43, 0.98), rgba(0, 80, 107, 0.84)),
+        radial-gradient(circle at 84% 18%, rgba(211, 154, 117, 0.24), transparent 0 28%, transparent 29%);
+    }
+
+    .delivery-dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.22fr) minmax(0, 0.96fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .control-module {
+      padding: clamp(22px, 2.4vw, 30px);
+      background: rgba(255, 255, 255, 0.09);
+      border-top: 3px solid var(--copper-2);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
+    }
+
+    .control-module h3 {
+      margin: 0 0 18px;
+      color: var(--white);
+      font-size: 25px;
+      line-height: 1.12;
+    }
+
+    .standards-control-stack,
+    .governance-control-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .standard-control-layer,
+    .control-block {
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border-left: 3px solid var(--copper-2);
+    }
+
+    .standard-control-layer strong,
+    .control-block strong,
+    .pmis-control-tile strong {
+      display: block;
+      color: var(--white);
+      font-size: 16px;
+      line-height: 1.15;
+    }
+
+    .standard-control-layer p,
+    .control-block p,
+    .pmis-control-tile p {
+      margin: 6px 0 0;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 13.5px;
+      line-height: 1.42;
+    }
+
+    .pmis-control-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pmis-control-tile {
+      min-height: 112px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.13);
+      border-top: 2px solid var(--copper-2);
+    }
+
+    .delivery-timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 22px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .delivery-phase {
+      min-height: 150px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .delivery-phase span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      color: var(--white);
+      background: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .delivery-phase h4 {
+      margin: 14px 0 0;
+      color: var(--white);
+      font-size: 18px;
+      line-height: 1.16;
+    }
+
+    @media (max-width: 1120px) {
+      .definition-grid,
+      .evidence-grid,
+      .delivery-timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .challenge-stack .issue-grid,
+      .challenge-stack .pestel-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .layer-mosaic {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: auto;
+      }
+
+      .layer-mosaic .mosaic-layer-card {
+        grid-column: auto;
+        grid-row: auto;
+        min-height: 330px;
+      }
+
+      .delivery-dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .project-hero,
+      .project-hero .container {
+        min-height: auto;
+      }
+
+      .project-hero .container {
+        padding: 130px 0 54px;
+      }
+
+      .definition-grid,
+      .command-card-grid,
+      .challenge-stack .issue-grid,
+      .challenge-stack .pestel-grid,
+      .evidence-grid,
+      .layer-mosaic,
+      .pmis-control-grid,
+      .delivery-timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .layer-mosaic .mosaic-layer-card {
+        min-height: 320px;
+      }
+
+      .challenge-subhead {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    .layer-mosaic {
+      grid-auto-rows: 220px;
+    }
+
+    .mosaic-layer-card .layer-card-front {
+      gap: 8px;
+      padding: 20px;
+    }
+
+    .mosaic-layer-card .layer-card-front h3 {
+      font-size: clamp(20px, 1.55vw, 28px);
+    }
+
+    .mosaic-layer-card .layer-card-front p {
+      font-size: 13.5px;
+      line-height: 1.34;
+    }
+
+    .layer-number {
+      font-size: clamp(28px, 2.5vw, 38px);
+    }
+
+    .layer-tags span,
+    .layer-affordance {
+      min-height: 24px;
+      padding: 0 8px;
+      font-size: 10.5px;
+    }
+
+    .layer-affordance {
+      min-height: 26px;
+    }
+
+    .delivery-control {
+      color: var(--ink);
+      background: var(--sand);
+    }
+
+    .delivery-control .section-head h2 {
+      color: var(--deep);
+    }
+
+    .delivery-control .section-head p {
+      color: var(--muted);
+    }
+
+    .phase-roadmap {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      margin: 4px 0 26px;
+      padding: 34px 0 0;
+    }
+
+    .phase-roadmap::before {
+      content: "";
+      position: absolute;
+      top: 14px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(0, 80, 107, 0.2);
+    }
+
+    .roadmap-phase {
+      position: relative;
+      min-height: 118px;
+      padding: 18px;
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.045);
+    }
+
+    .roadmap-phase::before {
+      content: "";
+      position: absolute;
+      top: -28px;
+      left: 18px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--copper);
+      box-shadow: 0 0 0 6px rgba(184, 124, 87, 0.16);
+    }
+
+    .roadmap-phase span {
+      display: block;
+      color: var(--copper);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .roadmap-phase strong {
+      display: block;
+      margin-top: 8px;
+      color: var(--deep);
+      font-size: 17px;
+      line-height: 1.15;
+    }
+
+    .roadmap-phase p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+
+    .control-pillar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .control-pillar-card {
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 22px;
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.045);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .control-pillar-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 42px rgba(0, 80, 107, 0.09);
+    }
+
+    .control-pillar-card h3 {
+      margin: 0 0 14px;
+      color: var(--deep);
+      font-size: 21px;
+      line-height: 1.12;
+    }
+
+    .control-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 16px;
+    }
+
+    .control-chip-row span {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 8px;
+      color: var(--deep);
+      background: rgba(0, 80, 107, 0.08);
+      border-left: 2px solid var(--copper);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .control-pillar-card p {
+      margin: auto 0 0;
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1120px) {
+      .phase-roadmap,
+      .control-pillar-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .phase-roadmap::before {
+        display: none;
+      }
+
+      .roadmap-phase::before {
+        top: 18px;
+        left: auto;
+        right: 18px;
+      }
+
+      .commercial-main-value-card,
+      .commercial-support-stack,
+      .tco-comparison-board {
+        grid-column: 1 / -1;
+      }
+
+      .commercial-main-value-card,
+      .commercial-support-stack {
+        min-height: auto;
+      }
+
+      .commercial-main-value-card {
+        min-height: 460px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .phase-roadmap,
+      .control-pillar-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .phase-roadmap {
+        padding: 0 0 0 18px;
+      }
+
+      .phase-roadmap::before {
+        display: block;
+        top: 0;
+        bottom: 0;
+        left: 6px;
+        right: auto;
+        width: 2px;
+        height: auto;
+      }
+
+      .roadmap-phase::before {
+        top: 22px;
+        left: -18px;
+        right: auto;
+      }
+
+      .commercial-value-board {
+        gap: 14px;
+      }
+
+      .commercial-main-value-card {
+        min-height: 420px;
+        padding: 26px;
+      }
+
+      .commercial-support-stack {
+        grid-template-rows: none;
+      }
+
+      .commercial-support-card {
+        min-height: 220px;
+      }
+
+      .commercial-main-value-card .commercial-value-number {
+        font-size: clamp(52px, 16vw, 72px);
+      }
+
+      .commercial-value-number {
+        font-size: clamp(40px, 12vw, 54px);
+      }
+
+      .tco-comparison-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .tco-arrow {
+        min-height: 18px;
+        transform: rotate(90deg);
+      }
+    }
+
+    .outcomes-compact,
+    .client-request-compact,
+    .closing-portal-cta {
+      padding: clamp(46px, 5vw, 72px) 0;
+    }
+
+    .outcomes-compact {
+      background: var(--paper);
+    }
+
+    .outcome-impact-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .outcome-impact-card {
+      min-height: 152px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      padding: 18px;
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.045);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .outcome-impact-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 42px rgba(0, 80, 107, 0.09);
+    }
+
+    .outcome-impact-card .outcome-mark {
+      color: var(--copper);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .outcome-impact-card h3 {
+      margin: 0;
+      color: var(--deep);
+      font-size: 17px;
+      line-height: 1.12;
+    }
+
+    .outcome-impact-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 1.38;
+    }
+
+    .client-request-compact {
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(8, 36, 43, 0.98), rgba(0, 80, 107, 0.86));
+    }
+
+    .request-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr);
+      gap: clamp(22px, 3vw, 38px);
+      align-items: center;
+      padding: clamp(26px, 3vw, 38px);
+      background: rgba(255, 255, 255, 0.09);
+      border-left: 4px solid var(--copper-2);
+    }
+
+    .request-copy h2 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(28px, 2.6vw, 42px);
+      line-height: 1.08;
+    }
+
+    .request-copy p {
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, 0.78);
+      line-height: 1.55;
+    }
+
+    .request-points {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .request-point {
+      min-height: 132px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border-top: 3px solid var(--copper-2);
+    }
+
+    .request-point span {
+      color: var(--copper-2);
+      font-weight: 700;
+    }
+
+    .request-point p {
+      margin: 10px 0 0;
+      color: rgba(255, 255, 255, 0.84);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .closing-portal-cta {
+      color: var(--white);
+      background: var(--deep);
+    }
+
+    .closing-portal-cta .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .closing-portal-cta h2 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(28px, 2.5vw, 40px);
+      line-height: 1.1;
+    }
+
+    .closing-portal-cta p {
+      margin: 12px 0 0;
+      max-width: 720px;
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .closing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    @media (max-width: 1120px) {
+      .outcome-impact-strip,
+      .request-points {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .request-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .outcome-impact-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .request-points {
+        grid-template-columns: 1fr;
+      }
+
+      .closing-portal-cta .container {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .closing-actions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" data-header>
+    <a class="brand" href="../index.html#top" aria-label="TerraNexus home">
+      <svg class="brand-logo" viewBox="0 0 430 108" role="img" aria-label="TerraNexus Mobility Consultancy Sdn Bhd">
+        <defs>
+          <linearGradient id="tn-green" x1="18" y1="20" x2="118" y2="92" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#22a85d"/><stop offset="1" stop-color="#006c40"/></linearGradient>
+          <linearGradient id="tn-blue" x1="82" y1="20" x2="156" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#20a9ef"/><stop offset="1" stop-color="#0d4f9c"/></linearGradient>
+          <linearGradient id="tn-terra" x1="178" y1="20" x2="287" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#158244"/><stop offset="1" stop-color="#27a260"/></linearGradient>
+          <linearGradient id="tn-nexus" x1="288" y1="20" x2="422" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1f86d2"/><stop offset="1" stop-color="#0f549f"/></linearGradient>
+        </defs>
+        <g>
+          <path d="M91 24C77 13 55 12 38 23C15 38 9 70 25 91C38 108 64 109 88 94" fill="none" stroke="url(#tn-green)" stroke-width="16" stroke-linecap="square"/>
+          <path d="M79 84C92 98 113 103 131 94C154 82 162 50 146 28C133 10 108 10 83 24" fill="none" stroke="url(#tn-blue)" stroke-width="16" stroke-linecap="square"/>
+          <circle cx="113" cy="57" r="32" fill="none" stroke="#60b8ec" stroke-width="1.8" opacity="0.85"/>
+          <path d="M84 57h58M113 25c-10 11-15 22-15 32s5 21 15 32M113 25c10 11 15 22 15 32s-5 21-15 32" fill="none" stroke="#7ec8f5" stroke-width="1" opacity="0.7"/>
+          <path d="M102 41c0-9 7-16 16-16s16 7 16 16c0 12-16 31-16 31s-16-19-16-31z" fill="#094b73"/>
+          <circle cx="118" cy="41" r="6" fill="#e8f7ff"/>
+          <path d="M34 81c15-7 34-8 50-2M37 88c14-5 31-5 45 0" fill="none" stroke="#e9fff4" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+          <path d="M42 74V56l5-11 5 11v18M55 74V49l6-15 6 15v25M72 74V58h8v16" fill="none" stroke="#dff8ea" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M24 98c30 5 76 5 132 0" fill="none" stroke="#1d8f80" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+        </g>
+        <g>
+          <text x="179" y="48" font-family="IBM Plex Sans, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="-1"><tspan fill="url(#tn-terra)">Terra</tspan><tspan fill="url(#tn-nexus)">Nexus</tspan></text>
+          <text x="184" y="73" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="5" fill="#d6dde1">MOBILITY CONSULTANCY</text>
+          <line x1="184" y1="88" x2="254" y2="88" stroke="#19a978" stroke-width="2"/>
+          <text x="274" y="93" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="5" fill="#d6dde1">SDN BHD</text>
+          <line x1="354" y1="88" x2="424" y2="88" stroke="#258fe5" stroke-width="2"/>
+        </g>
+      </svg>
+    </a>
+
+    <nav class="main-nav" data-nav aria-label="Main navigation">
+      <div class="nav-item"><a class="nav-link" href="../index.html#top">HOME</a></div>
+      <div class="nav-item">
+        <a class="nav-link" href="../index.html#about">ABOUT US <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../index.html#about">About TerraNexus</a>
+          <a href="../index.html#strategy">Corporate Strategy Map</a>
+          <a href="../index.html#team">Project Delivery Team</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="../our-services/index.html">SERVICES <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../our-services/index.html#sustainable-mobility">Sustainable Mobility Strategy</a>
+          <a href="../our-services/index.html#technical-project-management">Technical Studies &amp; Project Management</a>
+          <a href="../our-services/index.html#governance-procurement">Governance &amp; Regulatory Advice</a>
+          <a href="../our-services/index.html#implementation-monitoring">Implementation &amp; Smart Monitoring</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link active" href="../um-project/index.html">UM PROJECT <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../um-project/index.html#glance">Project Overview</a>
+          <a href="../um-project/index.html#mobility-solution">Mobility Solution</a>
+          <a href="../um-project/index.html#project-management">Project Management Framework</a>
+          <a href="../um-project/index.html#commercial-value">Commercial Value</a>
+          <a href="../um-project/index.html#outcomes">Expected Outcomes</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="../stakeholder-portal/index.html#top">STAKEHOLDER PORTAL <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../stakeholder-portal/index.html#top">Portal Overview</a>
+          <a href="../stakeholder-portal/index.html#live-dashboard">Live Shuttle</a>
+          <a href="../stakeholder-portal/index.html#hub-availability">Hub Availability</a>
+          <a href="../stakeholder-portal/index.html#impact">Sustainability Impact</a>
+          <a href="../stakeholder-portal/index.html#pmis-dashboard">PMIS Dashboard</a>
+          <a href="../stakeholder-portal/index.html#feedback">Submit Feedback</a>
+          <a href="../stakeholder-portal/index.html#updates">Project Updates</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="../index.html#contact">CONTACT <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../index.html#contact">Company Contact</a>
+          <a href="../stakeholder-portal/index.html#feedback">Stakeholder Feedback</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-button" data-search-open aria-label="Search">
+        <i data-lucide="search" width="21" height="21"></i>
+      </button>
+      <a class="pill" href="../stakeholder-portal/index.html#top">
+        OPEN PORTAL
+        <span class="icon-round"><i data-lucide="arrow-up-right" width="16" height="16"></i></span>
+      </a>
+      <button class="icon-button menu-toggle" data-menu-toggle aria-label="Open menu">
+        <i data-lucide="menu" width="22" height="22"></i>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="project-hero section">
+      <div class="container">
+        <div class="project-hero-content">
+          <p class="eyebrow">UM Green Mobility Proposal</p>
+          <h1>UM Green Mobility Project</h1>
+          <p class="hero-subtitle">A zero-emission smart campus mobility ecosystem for Universiti Malaya.</p>
+          <p class="hero-pitch">TerraNexus proposes an integrated mobility, energy, digital and governance solution to reduce private vehicle dependence and improve campus accessibility.</p>
+          <div class="hero-actions">
+            <a class="pill" href="#mobility-solution">Explore Mobility Solution <span class="icon-round"><i data-lucide="arrow-up-right" width="16" height="16"></i></span></a>
+            <a class="pill secondary" href="../stakeholder-portal/index.html#top">Open Stakeholder Portal <span class="icon-round"><i data-lucide="arrow-up-right" width="16" height="16"></i></span></a>
+          </div>
+        </div>
+        <div class="hero-metrics" aria-label="Project metric strip">
+          <div class="metric-strip-grid">
+            <article class="scale-metric"><strong>RM285M</strong><span>Total Development Cost</span></article>
+            <article class="scale-metric"><strong>35</strong><span>Electric Shuttle Buses</span></article>
+            <article class="scale-metric"><strong>2.4 MWp</strong><span>Solar PV Target</span></article>
+            <article class="scale-metric"><strong>RM312.5M</strong><span>Total Quantified Value</span></article>
+            <article class="scale-metric"><strong>2030</strong><span>Core Completion Target</span></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-band command-dashboard section" id="glance">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Project Definition</p>
+            <h2 class="section-title">Project Command Dashboard</h2>
+          </div>
+          <p>A structured summary of the project definition, scope and delivery logic for the UM Green Mobility Project.</p>
+        </div>
+        <div class="definition-grid">
+          <article class="definition-tile"><span>Project Type</span><h3>Zero-Emission Smart Campus Mobility</h3></article>
+          <article class="definition-tile"><span>Client Context</span><h3>Universiti Malaya</h3></article>
+          <article class="definition-tile"><span>Core System</span><h3>Eight-layer mobility ecosystem</h3></article>
+          <article class="definition-tile"><span>Delivery Logic</span><h3>Hybrid delivery + PMIS monitoring</h3></article>
+        </div>
+        <div class="command-card-grid">
+          <article class="command-card"><h3>Background</h3><p>UM faces growing pressure from private vehicle use, parking demand, gate congestion and fragmented internal mobility.</p></article>
+          <article class="command-card"><h3>Scope</h3><p>The project covers demand management, active mobility, electric shuttle services, energy systems, Mobility Hubs, digital platforms and governance.</p></article>
+          <article class="command-card"><h3>Objectives</h3><p>To deliver a low-emission, user-centred and financially justified campus mobility transformation.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-band dark section" id="challenges">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Problem Context</p>
+            <h2 class="section-title">UM Mobility Challenges &amp; PESTEL Snapshot</h2>
+          </div>
+          <p>This section summarises the key campus mobility problems and the external factors that shape the proposed green mobility response.</p>
+        </div>
+        <div class="challenge-stack">
+          <div>
+            <div class="challenge-subhead"><h3>UM Mobility Challenges</h3><span>Campus problem map</span></div>
+            <div class="issue-grid">
+              <article class="issue-node issue-node--image" style="--issue-image: url('../assets/um-project/private-vehicle-dependence-campus.png');"><h4>01 Private Vehicle Dependence</h4><p>High reliance on private vehicles increases internal circulation pressure.</p></article>
+              <article class="issue-node issue-node--image" style="--issue-image: url('../assets/um-project/parking-pressure-campus.png');"><h4>02 Parking Pressure</h4><p>Limited parking capacity increases search traffic and access stress.</p></article>
+              <article class="issue-node issue-node--image" style="--issue-image: url('../assets/um-project/gate-congestion.jpg');"><h4>03 Gate Congestion</h4><p>Peak-period flows create pressure at campus access points.</p></article>
+              <article class="issue-node issue-node--image" style="--issue-image: url('../assets/um-project/traffic-emissions-campus.png');"><h4>04 Traffic Emissions</h4><p>Vehicle movement contributes to carbon and local air-quality impacts.</p></article>
+              <article class="issue-node issue-node--image" style="--issue-image: url('../assets/um-project/tropical-climate-covered-walkway.png');"><h4>05 Tropical Climate</h4><p>Heat and rainfall reduce walking and cycling comfort.</p></article>
+              <article class="issue-node issue-node--image" style="--issue-image: url('../assets/um-project/complex-user-scenarios.png');"><h4>06 Complex User Scenarios</h4><p>Students, staff, visitors, UMMC users and accessibility users need different mobility responses.</p></article>
+            </div>
+          </div>
+          <div>
+            <div class="challenge-subhead"><h3>PESTEL Snapshot</h3><span>External delivery factors</span></div>
+            <div class="pestel-grid">
+              <article class="pestel-card pestel-card--image" style="--pestel-image: url('../assets/um-project/pestel-political.png');"><h4>Political</h4><p>Alignment with UM governance and sustainability direction.</p></article>
+              <article class="pestel-card pestel-card--image" style="--pestel-image: url('../assets/um-project/pestel-economic.png');"><h4>Economic</h4><p>Need for TDC, TCO and SROI justification.</p></article>
+              <article class="pestel-card pestel-card--image" style="--pestel-image: url('../assets/um-project/pestel-social.png');"><h4>Social</h4><p>Inclusive access for different campus users.</p></article>
+              <article class="pestel-card pestel-card--image" style="--pestel-image: url('../assets/um-project/pestel-technological.png');"><h4>Technological</h4><p>PMIS, Mobility App, Digital Twin and smart charging integration.</p></article>
+              <article class="pestel-card pestel-card--image" style="--pestel-image: url('../assets/um-project/pestel-environmental.png');"><h4>Environmental</h4><p>Carbon reduction, modal shift and sustainability reporting.</p></article>
+              <article class="pestel-card pestel-card--image" style="--pestel-image: url('../assets/um-project/pestel-legal.png');"><h4>Legal</h4><p>Procurement, data privacy, safety and accessibility compliance.</p></article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-band evidence-band section" id="alignment">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Evidence Band</p>
+            <h2 class="section-title">Strategic Alignment &amp; Benchmarking Adaptation</h2>
+          </div>
+          <p>Aligned with UM direction and adapted from international mobility lessons to fit local campus conditions.</p>
+        </div>
+        <div class="evidence-grid">
+          <article class="evidence-card"><span class="evidence-type">Strategic Alignment</span><h3>UM Transformation Plan</h3><p>Supports future-ready campus transformation and digital monitoring.</p></article>
+          <article class="evidence-card"><span class="evidence-type">Strategic Alignment</span><h3>UM Master Plan 2050</h3><p>Supports long-term accessibility and internal circulation improvement.</p></article>
+          <article class="evidence-card"><span class="evidence-type">Strategic Alignment</span><h3>UM Sustainability Policy</h3><p>Supports low-carbon mobility and emission reduction.</p></article>
+          <article class="evidence-card"><span class="evidence-type">Strategic Alignment</span><h3>Eco-Campus / Impact Reporting</h3><p>Supports visible sustainability outcomes and annual reporting.</p></article>
+          <article class="evidence-card"><span class="evidence-type">Benchmarking Adaptation</span><h3>Electric Shuttle</h3><p>Adapted through mixed fleet sizing and phased deployment.</p></article>
+          <article class="evidence-card"><span class="evidence-type">Benchmarking Adaptation</span><h3>Active Mobility</h3><p>Adapted through covered walkways, cycling routes and monsoon-friendly design.</p></article>
+          <article class="evidence-card"><span class="evidence-type">Benchmarking Adaptation</span><h3>Digital Mobility</h3><p>Adapted through UM Mobility App, PMIS dashboard and Digital Twin.</p></article>
+          <article class="evidence-card"><span class="evidence-type">Benchmarking Adaptation</span><h3>Mobility Hub</h3><p>Adapted through gateway hubs, residential zones and satellite points.</p></article>
+        </div>
+        <p class="evidence-note">Adapted to UM conditions: Tropical heat · Heavy rainfall · Hilly terrain · UMMC traffic · Affordability · Public university governance</p>
+      </div>
+    </section>
+
+    <section class="page-band section" id="mobility-solution">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Main Solution Showcase</p>
+            <h2 class="section-title">Proposed Mobility Solution</h2>
+          </div>
+          <p>An eight-layer smart campus mobility ecosystem connecting policy, active mobility, public realm, electric fleet, energy, hubs, digital platforms and governance.</p>
+        </div>
+        <div class="mobility-mosaic-intro">
+          <p>Each layer is a coordinated part of one campus mobility ecosystem. Select a layer to view its role, key components, technical enablement, UM-specific adaptation and expected function.</p>
+        </div>
+        <div class="layer-mosaic" id="mobility-layer-grid">
+          <article class="layer-card--interactive mosaic-layer-card layer-card-01" style="--layer-image: url('../assets/um-project/demand-policy-campus-entry.png');" data-layer-card="demand-policy" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">01</span><h3>Demand-side Policy Layer</h3><p>Manages private vehicle demand before users enter the campus core.</p><div class="layer-tags"><span>Parking Reform</span><span>ANPR</span><span>QR Permit</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>Parking reform</li><li>ANPR access control</li><li>Park-and-Ride</li><li>Event traffic protocol</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="demand-policy">View Details</button></div>
+          </article>
+          <article class="layer-card--interactive mosaic-layer-card layer-card-02" style="--layer-image: url('../assets/um-project/active-mobility-app.png');" data-layer-card="active-mobility" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">02</span><h3>Active Mobility Layer</h3><p>Supports walking, cycling and shared micro-mobility for short campus trips.</p><div class="layer-tags"><span>E-bikes</span><span>E-scooters</span><span>Helmet Access</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>Shared micro-mobility</li><li>Smart docking</li><li>Helmet hygiene</li><li>Cycle counters</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="active-mobility">View Details</button></div>
+          </article>
+          <article class="layer-card--interactive mosaic-layer-card layer-card-03" style="--layer-image: url('../assets/um-project/public-realm-walkway.png');" data-layer-card="public-realm" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">03</span><h3>Public Realm Layer</h3><p>Creates shaded, safer and pedestrian-friendly campus movement corridors.</p><div class="layer-tags"><span>Covered Walkways</span><span>Safe Crossings</span><span>Wayfinding</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>Shaded corridors</li><li>Safe crossings</li><li>Digital wayfinding</li><li>Accessibility mapping</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="public-realm">View Details</button></div>
+          </article>
+          <article class="layer-card--interactive mosaic-layer-card layer-card-04" style="--layer-image: url('../assets/um-project/mobility-hub.jpg');" data-layer-card="vehicle-layer" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">04</span><h3>Vehicle Layer</h3><p>Provides electric shuttle and micro-transit services for campus circulation.</p><div class="layer-tags"><span>35 Buses</span><span>Micro-transit</span><span>Telematics</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>Electric shuttle fleet</li><li>Micro-transit</li><li>GPS / telematics</li><li>Charging compatibility</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="vehicle-layer">View Details</button></div>
+          </article>
+          <article class="layer-card--interactive mosaic-layer-card layer-card-05" style="--layer-image: url('../assets/um-project/electric-bus-charging.webp');" data-layer-card="energy-backbone" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">05</span><h3>Energy Backbone Layer</h3><p>Supports charging and clean energy through PV, microgrid and smart charging.</p><div class="layer-tags"><span>2.4 MWp PV</span><span>Microgrid</span><span>Smart Charging</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>Canopy and rooftop PV</li><li>Microgrid Phase 1</li><li>Smart charging</li><li>Battery monitoring</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="energy-backbone">View Details</button></div>
+          </article>
+          <article class="layer-card--interactive mosaic-layer-card layer-card-06" style="--layer-image: url('../assets/um-project/mobility-hub-layer-campus.png');" data-layer-card="mobility-hub" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">06</span><h3>Mobility Hub Layer</h3><p>Integrates shuttle stops, micro-mobility, charging and waiting areas.</p><div class="layer-tags"><span>Gateway Hubs</span><span>Charging</span><span>Real-time Info</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>Gateway hubs</li><li>Real-time screens</li><li>Smart locks</li><li>Hub availability</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="mobility-hub">View Details</button></div>
+          </article>
+          <article class="layer-card--interactive mosaic-layer-card layer-card-07" style="--layer-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=85');" data-layer-card="digital-layer" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">07</span><h3>Digital Layer</h3><p>Connects users, vehicles, hubs and project data through digital platforms.</p><div class="layer-tags"><span>Mobility App</span><span>PMIS</span><span>Digital Twin</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>UM Mobility App</li><li>PMIS dashboard</li><li>Digital Twin</li><li>API integration</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="digital-layer">View Details</button></div>
+          </article>
+          <article class="layer-card--interactive mosaic-layer-card layer-card-08" style="--layer-image: url('../assets/um-project/governance-layer-workshop.png');" data-layer-card="governance-layer" tabindex="0" aria-expanded="false">
+            <div class="layer-card-front"><span class="layer-number">08</span><h3>Governance Layer</h3><p>Controls decision-making, accountability, data governance and carbon reporting.</p><div class="layer-tags"><span>PMO</span><span>Stakeholders</span><span>Carbon Reporting</span></div><span class="layer-affordance">View Details</span></div>
+            <div class="layer-card-back"><h3>Key Focus</h3><ul><li>Programme Board</li><li>Joint PMO</li><li>Stakeholder Council</li><li>PMIS records</li></ul><button class="layer-detail-button" type="button" data-layer-detail-trigger="governance-layer">View Details</button></div>
+          </article>
+        </div>
+        <aside class="mobility-detail-panel" id="mobility-detail-panel" data-mobility-detail aria-hidden="true">
+          <div data-layer-detail-content></div>
+          <div class="detail-panel-controls">
+            <button class="detail-panel-button secondary" type="button" data-back-to-layers>Back to Layers</button>
+            <button class="detail-panel-button secondary" type="button" data-prev-layer>Previous Layer</button>
+            <button class="detail-panel-button" type="button" data-next-layer>Next Layer</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page-band delivery-control section" id="project-management">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Delivery Control</p>
+            <h2 class="section-title">Delivery Control Dashboard</h2>
+          </div>
+          <p>How TerraNexus controls the project through standards, PMIS, governance, risk, procurement and phased implementation.</p>
+        </div>
+        <div class="phase-roadmap" aria-label="Phase roadmap">
+          <article class="roadmap-phase"><span>Phase 0</span><strong>2026 Q3 - 2027 Q2</strong><p>Baseline Studies</p></article>
+          <article class="roadmap-phase"><span>Phase 1</span><strong>2027 Q3 - 2028 Q4</strong><p>Foundation Deployment</p></article>
+          <article class="roadmap-phase"><span>Phase 2</span><strong>2029 Q1 - 2030 Q4</strong><p>Core System Completion</p></article>
+          <article class="roadmap-phase"><span>Phase 3</span><strong>2031 - 2036</strong><p>Optimisation</p></article>
+        </div>
+        <div class="control-pillar-grid" aria-label="Delivery control pillars">
+          <article class="control-pillar-card">
+            <h3>Standards Framework</h3>
+            <div class="control-chip-row"><span>PMBOK 7</span><span>PRINCE2</span><span>ISO 21500/21502</span><span>Specialist Standards</span></div>
+            <p>Combines value, stage-gate, process and specialist control standards.</p>
+          </article>
+          <article class="control-pillar-card">
+            <h3>PMIS Monitoring</h3>
+            <div class="control-chip-row"><span>Schedule</span><span>Cost</span><span>Risk</span><span>Procurement</span><span>Sustainability</span></div>
+            <p>Tracks project performance through one integrated reporting platform.</p>
+          </article>
+          <article class="control-pillar-card">
+            <h3>Governance Structure</h3>
+            <div class="control-chip-row"><span>Programme Board</span><span>Joint PMO</span><span>Workstream Leads</span></div>
+            <p>Defines decision rights, escalation routes and accountability.</p>
+          </article>
+          <article class="control-pillar-card">
+            <h3>Risk &amp; Procurement Control</h3>
+            <div class="control-chip-row"><span>Risk Register</span><span>Risk Owners</span><span>Multi-OEM Packaging</span></div>
+            <p>Controls delivery uncertainty, supplier packages and contract performance.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-band paper section" id="commercial-value">
+      <span class="anchor-alias" id="commercial" aria-hidden="true"></span>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Commercial Value</p>
+            <h2 class="section-title">Commercial Value Proposition</h2>
+          </div>
+          <p>Financially justified through CAPEX, lifecycle saving, quantified social value and sustainability financing.</p>
+        </div>
+        <div class="commercial-value-board">
+          <article class="commercial-main-value-card" aria-label="Total quantified commercial value">
+            <span class="commercial-board-tag">SROI + TCO Value</span>
+            <div class="commercial-value-number">RM312.5M</div>
+            <h3>Total Quantified Value</h3>
+            <p>Combined value from RM257.5M monetised social value and RM55M direct TCO saving.</p>
+          </article>
+          <div class="commercial-support-stack" aria-label="Supporting commercial metrics">
+            <article class="commercial-support-card">
+              <span class="commercial-board-tag">TDC</span>
+              <div class="commercial-value-number">RM285M</div>
+              <h3>Total Development Cost</h3>
+              <p>Estimated Asset CAPEX for the proposed UM zero-emission smart campus mobility ecosystem.</p>
+            </article>
+            <article class="commercial-support-card">
+              <span class="commercial-board-tag">Lifecycle Saving</span>
+              <div class="commercial-value-number">RM55M</div>
+              <h3>10-Year TCO Saving</h3>
+              <p>Estimated direct saving between the legacy baseline and zero-emission scenario.</p>
+            </article>
+            <article class="commercial-support-card">
+              <span class="commercial-board-tag">Green Financing</span>
+              <div class="commercial-value-number">RM250M</div>
+              <h3>Indicative Green Sukuk</h3>
+              <p>Potential sustainability financing pathway supported by lifecycle and carbon value logic.</p>
+            </article>
+          </div>
+          <div class="tco-comparison-board" aria-label="10-year TCO comparison">
+            <h3>10-Year TCO Comparison</h3>
+            <div class="tco-comparison-flow">
+              <div class="tco-step"><span>Legacy Baseline</span><strong>RM465M</strong></div>
+              <div class="tco-arrow" aria-hidden="true">→</div>
+              <div class="tco-step"><span>Zero-Emission Scenario</span><strong>RM410M</strong></div>
+              <div class="tco-arrow" aria-hidden="true">→</div>
+              <div class="tco-step highlight"><span>Estimated Saving</span><strong>RM55M</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="outcomes-compact section" id="outcomes">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Expected Outcomes</p>
+            <h2 class="section-title">Expected Outcomes</h2>
+          </div>
+          <p>Six measurable impacts expected from the UM Green Mobility Project.</p>
+        </div>
+        <div class="outcome-impact-strip">
+          <article class="outcome-impact-card"><span class="outcome-mark">01</span><h3>Carbon Reduction</h3><p>Lower transport-related emissions.</p></article>
+          <article class="outcome-impact-card"><span class="outcome-mark">02</span><h3>Modal Shift</h3><p>More walking, cycling and shuttle use.</p></article>
+          <article class="outcome-impact-card"><span class="outcome-mark">03</span><h3>Parking Relief</h3><p>Reduced pressure on campus parking demand.</p></article>
+          <article class="outcome-impact-card"><span class="outcome-mark">04</span><h3>Campus Accessibility</h3><p>Better access for students, staff, visitors and UMMC users.</p></article>
+          <article class="outcome-impact-card"><span class="outcome-mark">05</span><h3>Energy Integration</h3><p>PV, charging and microgrid support.</p></article>
+          <article class="outcome-impact-card"><span class="outcome-mark">06</span><h3>Transparent Reporting</h3><p>PMIS-based performance tracking.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="client-request-compact section" id="client-request">
+      <div class="container">
+        <div class="request-panel">
+          <div class="request-copy">
+            <p class="eyebrow">Client Request</p>
+            <h2 class="section-title">Client Request</h2>
+            <p>TerraNexus respectfully requests Universiti Malaya to review the proposed UM Green Mobility Project as an integrated mobility, energy, digital and governance solution. The proposal is designed to support low-carbon campus access, improve internal mobility performance and provide a financially justified pathway for phased implementation.</p>
+          </div>
+          <div class="request-points" aria-label="Client request points">
+            <article class="request-point"><span>01</span><p>Review the proposed eight-layer mobility system.</p></article>
+            <article class="request-point"><span>02</span><p>Consider the phased implementation and commercial value logic.</p></article>
+            <article class="request-point"><span>03</span><p>Engage through the Stakeholder Portal for feedback and refinement.</p></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="closing-portal-cta section" id="portal">
+      <div class="container">
+        <div>
+          <h2>Continue to Stakeholder Portal</h2>
+          <p>View project updates, submit feedback and follow the proposed UM Green Mobility implementation journey.</p>
+        </div>
+        <div class="closing-actions">
+          <a class="pill" href="../stakeholder-portal/index.html#top">Open Stakeholder Portal <span class="icon-round"><i data-lucide="arrow-up-right" width="16" height="16"></i></span></a>
+          <a class="pill secondary" href="../stakeholder-portal/index.html#feedback">Submit Feedback <span class="icon-round"><i data-lucide="message-square" width="16" height="16"></i></span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <h3 class="footer-name">TerraNexus</h3>
+        <p>Smart Mobility. Sustainable Delivery.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="../index.html#about">About Us</a>
+        <a href="../our-services/index.html">Services</a>
+        <a href="#top">UM Project</a>
+        <a href="../stakeholder-portal/index.html#top">Stakeholder Portal</a>
+        <a href="../index.html#contact">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Location</h4>
+        <span>Kuala Lumpur</span>
+        <span>TerraNexus Project Office</span>
+        <span>Malaysia</span>
+      </div>
+      <div class="footer-col">
+        <h4>Phone Number</h4>
+        <a href="tel:+60120000000">+60 12 000 0000</a>
+      </div>
+      <div class="footer-col">
+        <h4>Email</h4>
+        <a href="mailto:hello@terranexus.my">hello@terranexus.my</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="#">LinkedIn</a>
+        <a href="https://wa.me/60120000000">WhatsApp</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>&copy; 2026 TerraNexus. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <div class="overlay" data-search-overlay aria-hidden="true">
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+      <button class="close-btn" data-close aria-label="Close search"><i data-lucide="x" width="18" height="18"></i></button>
+      <label for="search-input">Search</label>
+      <input id="search-input" type="search" placeholder="Type keyword">
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    const body = document.body;
+    const header = document.querySelector("[data-header]");
+    const nav = document.querySelector("[data-nav]");
+    const menuToggle = document.querySelector("[data-menu-toggle]");
+
+    window.addEventListener("scroll", () => {
+      header.classList.toggle("scrolled", window.scrollY > 24);
+    });
+
+    menuToggle.addEventListener("click", () => {
+      nav.classList.toggle("open");
+      header.classList.toggle("menu-open", nav.classList.contains("open"));
+    });
+
+    document.querySelector("[data-search-open]").addEventListener("click", () => {
+      const layer = document.querySelector("[data-search-overlay]");
+      openLayer(layer);
+      setTimeout(() => layer.querySelector("input").focus(), 80);
+    });
+
+    document.querySelectorAll("[data-close]").forEach((button) => {
+      button.addEventListener("click", () => closeLayer(button.closest(".overlay")));
+    });
+
+    document.querySelectorAll(".overlay").forEach((layer) => {
+      layer.addEventListener("click", (event) => {
+        if (event.target === layer) closeLayer(layer);
+      });
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        document.querySelectorAll(".overlay.active").forEach(closeLayer);
+      }
+    });
+
+    function openLayer(layer) {
+      layer.classList.add("active");
+      layer.setAttribute("aria-hidden", "false");
+      body.classList.add("locked");
+    }
+
+    function closeLayer(layer) {
+      if (!layer) return;
+      layer.classList.remove("active");
+      layer.setAttribute("aria-hidden", "true");
+      if (!document.querySelector(".overlay.active")) body.classList.remove("locked");
+    }
+
+    const mobilityDetailPanel = document.querySelector("[data-mobility-detail]");
+    const mobilityDetailContent = document.querySelector("[data-layer-detail-content]");
+    const mobilityLayerGrid = document.querySelector("#mobility-layer-grid");
+    const layerCards = Array.from(document.querySelectorAll("[data-layer-card]"));
+    const layerDetailTriggers = Array.from(document.querySelectorAll("[data-layer-detail-trigger]"));
+    const backToLayers = document.querySelector("[data-back-to-layers]");
+    const prevLayerButton = document.querySelector("[data-prev-layer]");
+    const nextLayerButton = document.querySelector("[data-next-layer]");
+
+    const mobilityLayerOrder = [
+      "demand-policy",
+      "active-mobility",
+      "public-realm",
+      "vehicle-layer",
+      "energy-backbone",
+      "mobility-hub",
+      "digital-layer",
+      "governance-layer"
+    ];
+
+    const mobilityLayerDetails = {
+      "demand-policy": `
+          <div class="detail-panel-head">
+            <h3>Demand-side Policy Layer</h3>
+            <p>This layer manages vehicle demand before it becomes campus congestion. It uses <strong>parking reform</strong>, access control, <strong>Park-and-Ride</strong> and event mobility protocols to reduce unnecessary private vehicle movement inside the UM campus core.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block">
+                <h4>Layer Role</h4>
+                <p>To reduce over-dependence on private cars and motorcycles by controlling access, managing parking demand and redirecting vehicles before they reach congested campus areas.</p>
+              </article>
+              <article class="detail-copy-block">
+                <h4>Operational Mechanism</h4>
+                <p>The <strong>Five-Tier Parking Sticker System</strong> classifies users by category and access need. Electric vehicles and motorcycles may be priced one tier lower than equivalent internal combustion vehicles to encourage cleaner travel choices.</p>
+                <p><strong>ANPR</strong> functions as a pre-verification system, not as a new gate bottleneck. Pre-registered vehicles, accessibility users, emergency vehicles, UMMC-related vehicles and essential service vehicles can enter smoothly, while unregistered vehicles receive diversion guidance before reaching the campus gate.</p>
+              </article>
+              <article class="detail-copy-block">
+                <h4>Event-Day Management</h4>
+                <p>For convocation, open days, conferences and sports events, the portal can support a Special <strong>Event Mobility Protocol</strong>. Event organisers may submit an Event Mobility Plan through the UM Mobility Portal. Temporary QR or ANPR permits can be used for VIPs, disabled visitors, emergency vehicles, logistics vehicles and essential vendors.</p>
+              </article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Key Policy Tools</h4>
+                <div class="detail-table-wrap">
+                  <table class="detail-table">
+                    <thead><tr><th>Policy Tool</th><th>Function</th></tr></thead>
+                    <tbody>
+                      <tr><td><strong>Parking Reform</strong></td><td>Reduces unnecessary private vehicle use inside the campus core.</td></tr>
+                      <tr><td>Peak-Hour Pricing</td><td>Discourages vehicle entry during congested periods.</td></tr>
+                      <tr><td><strong>Five-Tier Parking Sticker System</strong></td><td>Classifies users based on need, affordability and access priority.</td></tr>
+                      <tr><td><strong>ANPR Access Control</strong></td><td>Pre-verifies vehicles and reduces gate bottlenecks.</td></tr>
+                      <tr><td><strong>Park-and-Ride Services</strong></td><td>Redirects vehicles to peripheral parking areas before entering the campus core.</td></tr>
+                      <tr><td>Special <strong>Event Mobility Protocol</strong></td><td>Manages traffic during convocation, open days, conferences and sports events.</td></tr>
+                      <tr><td>Boundary Traffic Management Plan</td><td>Prevents campus restrictions from shifting congestion to external roads.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+              <article class="detail-table-block">
+                <h4>Five-Tier Parking Sticker Logic</h4>
+                <div class="detail-table-wrap">
+                  <table class="detail-table">
+                    <thead><tr><th>User Category</th><th>Policy Logic</th></tr></thead>
+                    <tbody>
+                      <tr><td>B40 Students</td><td>Protected through affordability-sensitive pricing.</td></tr>
+                      <tr><td>Resident Students</td><td>Managed based on residential mobility needs.</td></tr>
+                      <tr><td>General Staff</td><td>Controlled through standard parking entitlement and access rules.</td></tr>
+                      <tr><td>Non-Residential Students</td><td>Encouraged to shift towards shuttle, <strong>Park-and-Ride</strong> and active mobility.</td></tr>
+                      <tr><td>Visitors</td><td>Managed through temporary access, QR permits or visitor parking rules.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap">
+                <table class="detail-table">
+                  <thead><tr><th>Technical Element</th><th>Function in the Demand-side Policy Layer</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>ANPR Access Control</strong></td><td>Supports automatic vehicle recognition and pre-verification before vehicles reach the campus gate.</td></tr>
+                    <tr><td><strong>Digital Parking Sticker Database</strong></td><td>Links parking entitlement, user category, vehicle type and pricing tier into one controllable database.</td></tr>
+                    <tr><td><strong>QR Temporary Permit System</strong></td><td>Supports temporary access for visitors, VIPs, disabled visitors, logistics vehicles and event-day users.</td></tr>
+                    <tr><td><strong>UM Mobility Portal</strong></td><td>Allows event organisers and authorised users to submit access requests, Event Mobility Plans and mobility-related information.</td></tr>
+                    <tr><td><strong>Gate Queue Dashboard</strong> / Parking Utilisation Dashboard</td><td>Tracks gate congestion, parking demand and access pressure to support operational adjustment.</td></tr>
+                    <tr><td><strong>PMIS Reporting Link</strong></td><td>Feeds parking, access and event-mobility data into the project monitoring system for governance review.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>These digital tools allow the policy layer to operate as a measurable access-management system rather than a manual parking control measure.</p>
+            </article>
+            <article class="detail-table-block">
+              <h4>UM-Specific Adaptation</h4>
+              <div class="detail-table-wrap">
+                <table class="detail-table">
+                  <thead><tr><th>Adaptation Area</th><th>Application to UM</th></tr></thead>
+                  <tbody>
+                    <tr><td><strong>Kuala Lumpur Gate</strong></td><td>Used as a peripheral <strong>Park-and-Ride</strong> and shuttle connection point.</td></tr>
+                    <tr><td><strong>Petaling Jaya Gate</strong></td><td>Supports vehicle interception before entering the campus core.</td></tr>
+                    <tr><td><strong>UMMC Interface</strong></td><td>Requires special access treatment for hospital-related users, emergency vehicles and visitors.</td></tr>
+                    <tr><td>Campus Core</td><td>Protected from unnecessary vehicle circulation through access control and mobility alternatives.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+            <article class="detail-bottom-card">
+              <h4>Expected Function</h4>
+              <p>This layer helps UM reduce parking pressure, limit unnecessary vehicle circulation, manage campus gate congestion, protect surrounding roads from spillover traffic, and prepare users to shift towards electric shuttles, active mobility and Mobility Hub services.</p>
+            </article>
+          </div>
+      `,
+      "active-mobility": `
+          <div class="detail-panel-head">
+            <h3>Active Mobility Layer</h3>
+            <p>This layer promotes walking, cycling and micro-mobility as practical alternatives to short-distance car and motorcycle trips inside the UM campus. It connects students, staff, visitors and UMMC-related users to faculties, libraries, residential colleges, Mobility Hubs and shuttle services.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block"><h4>Layer Role</h4><p>To reduce short-distance private vehicle trips by providing safer, more comfortable and more reliable low-emission travel options across the campus.</p></article>
+              <article class="detail-copy-block"><h4>Operational Mechanism</h4><p>The active mobility system combines station-based e-bikes, seated e-scooters, safe cycling routes, covered walking links and secure parking points. These elements work together with electric shuttle services and Mobility Hubs, so users can complete short trips without relying on private cars or motorcycles.</p></article>
+              <article class="detail-copy-block"><h4>Safety and Hygiene System</h4><p>The proposal includes a Hygienic Helmet Access System for micro-mobility users. Regular users may use personal helmets through purchase, subsidy or semester subscription. Short-term users and visitors may access rental helmets through smart cabinets with disposable liners, cleaning support, UV-C sterilisation, ventilation drying and QR or RFID hygiene status updates.</p></article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Key Active Mobility Components</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Component</th><th>Function</th></tr></thead><tbody>
+                  <tr><td><strong>Covered Walkways</strong></td><td>Improves walking comfort during hot and rainy weather.</td></tr>
+                  <tr><td><strong>8 km Segregated Cycling Network</strong></td><td>Provides safer and more reliable cycling routes across campus.</td></tr>
+                  <tr><td><strong>E-Bike Sharing System</strong></td><td>Supports first-mile and last-mile movement for students and staff.</td></tr>
+                  <tr><td><strong>Seated E-Scooter System</strong></td><td>Provides short-distance mobility for users who may prefer seated micro-mobility.</td></tr>
+                  <tr><td>Secure Bicycle Parking</td><td>Supports regular cycling use at faculty hubs and key campus nodes.</td></tr>
+                  <tr><td>Hygienic Helmet Access System</td><td>Improves safety and hygiene for shared micro-mobility users.</td></tr>
+                  <tr><td>Cycle Counters</td><td>Collects usage data for future mobility planning.</td></tr>
+                </tbody></table></div>
+              </article>
+              <article class="detail-table-block">
+                <h4>Micro-Mobility Fleet Logic</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>System</th><th>Phase 1 Pilot Fleet</th><th>2030 Core Target Fleet</th><th>Role</th></tr></thead><tbody>
+                  <tr><td>E-Bike System</td><td>200 units</td><td>500 units</td><td>Supports first-mile and last-mile campus movement.</td></tr>
+                  <tr><td>Seated E-Scooter System</td><td>150 units</td><td>200 units</td><td>Supports flexible short-distance trips and users needing seated mobility.</td></tr>
+                </tbody></table></div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Technical Element</th><th>Function in the Active Mobility Layer</th></tr></thead><tbody>
+                <tr><td>Smart Docking and Smart Locks</td><td>Controls rental, return and asset availability for e-bikes and seated e-scooters.</td></tr>
+                <tr><td>UM Mobility App Booking</td><td>Allows users to check availability, reserve vehicles and locate nearby mobility points.</td></tr>
+                <tr><td>Hygienic Helmet Smart Cabinets</td><td>Provides controlled helmet access with QR or RFID hygiene status.</td></tr>
+                <tr><td>Cycle Counters</td><td>Measures cycling activity and supports future route planning.</td></tr>
+                <tr><td>CCTV and Lighting Integration</td><td>Improves safety along active mobility routes and parking areas.</td></tr>
+                <tr><td>Dynamic Capacity Indicators</td><td>Shows bicycle parking and micro-mobility availability at faculty hubs.</td></tr>
+                <tr><td>PMIS / Ridership Data Link</td><td>Feeds usage data into the project monitoring system for performance review.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-table-block">
+              <h4>UM-Specific Adaptation</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Adaptation Area</th><th>Application to UM</th></tr></thead><tbody>
+                <tr><td>Main Library - Faculty of Engineering Route</td><td>Covered walkway support for high-use pedestrian movement.</td></tr>
+                <tr><td>UMMC - Faculty of Medicine Route</td><td>Improves comfort and accessibility for medical-related campus users.</td></tr>
+                <tr><td>Residential Colleges - Faculty Clusters</td><td>Supports student daily movement between accommodation and academic areas.</td></tr>
+                <tr><td>Faculty Hubs</td><td>Provides secure bicycle parking, dynamic capacity indication and micro-mobility access.</td></tr>
+                <tr><td>Hilly and Rainy Campus Conditions</td><td>Requires anti-skid surfaces, monsoon-friendly drainage, lighting and protected routes.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-bottom-card"><h4>Expected Function</h4><p>This layer helps UM reduce short-distance car trips, improve first-mile and last-mile connectivity, support healthier campus movement, increase walking and cycling comfort, and strengthen the link between Mobility Hubs, shuttle services and campus destinations.</p></article>
+          </div>
+      `,
+      "public-realm": `
+          <div class="detail-panel-head">
+            <h3>Public Realm Layer</h3>
+            <p>This layer modifies the physical campus environment to make UM more pedestrian-friendly, shaded, comfortable and accessible. It supports the shift from private vehicle movement towards walking, cycling, shuttle use and micro-mobility.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block"><h4>Layer Role</h4><p>To create a campus environment where walking, cycling, shuttle access and micro-mobility become safer and more attractive than unnecessary private vehicle circulation.</p></article>
+              <article class="detail-copy-block"><h4>Operational Mechanism</h4><p>The Public Realm Layer uses an academic-core superblock to reduce excessive car traffic in the main academic zone. Instead of allowing general vehicles to circulate freely, the campus core gives greater priority to walking, cycling, public transport, micro-mobility and shuttle access.</p></article>
+              <article class="detail-copy-block"><h4>Safety, Comfort and Identity</h4><p>The public realm should improve safety, shade, visibility, accessibility and campus identity. Tree-canopy alignment, safer crossings, wayfinding and biodiversity-friendly landscaping make the campus more comfortable and encourage more users to walk or cycle instead of using private vehicles for short trips.</p></article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Key Public Realm Components</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Component</th><th>Function</th></tr></thead><tbody>
+                  <tr><td>Academic-Core Superblock</td><td>Gives priority to walking, cycling, shuttle movement and micro-mobility over general private vehicles.</td></tr>
+                  <tr><td>Tree-Canopy Alignment</td><td>Provides shade along walking and cycling routes to reduce heat exposure.</td></tr>
+                  <tr><td>Biodiversity-Friendly Landscaping</td><td>Enhances the campus environment while supporting UM's sustainability image.</td></tr>
+                  <tr><td>Safe Crossings</td><td>Improves pedestrian safety at key movement points and road interfaces.</td></tr>
+                  <tr><td>Clear Wayfinding</td><td>Helps users navigate between faculties, hubs, shuttle stops and public transport links.</td></tr>
+                  <tr><td>Accessible Movement Routes</td><td>Supports users with disabilities, UMMC-related users, visitors and vulnerable groups.</td></tr>
+                  <tr><td>Public-Realm Comfort Improvements</td><td>Improves walking comfort through shaded paths, seating, lighting and safer movement areas.</td></tr>
+                </tbody></table></div>
+              </article>
+              <article class="detail-table-block">
+                <h4>Academic-Core Superblock Logic</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Area</th><th>Policy Logic</th></tr></thead><tbody>
+                  <tr><td>Core Academic Area</td><td>General private vehicle movement is more tightly restricted.</td></tr>
+                  <tr><td>Walking and Cycling Routes</td><td>Given higher priority for safety, comfort and continuity.</td></tr>
+                  <tr><td>Public Transport and Shuttle Access</td><td>Maintained to support reliable campus movement.</td></tr>
+                  <tr><td>Emergency and Essential Vehicles</td><td>Still allowed to enter when needed.</td></tr>
+                  <tr><td>Accessibility and UMMC-Related Vehicles</td><td>Given controlled access to support medical, accessibility and essential service needs.</td></tr>
+                </tbody></table></div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Technical Element</th><th>Function in the Public Realm Layer</th></tr></thead><tbody>
+                <tr><td>Anti-Skid Surface Design</td><td>Improves walking and cycling safety during rain.</td></tr>
+                <tr><td>Monsoon-Friendly Drainage</td><td>Reduces water accumulation and supports all-weather mobility.</td></tr>
+                <tr><td>Lighting and CCTV Coverage</td><td>Improves safety, visibility and route security.</td></tr>
+                <tr><td>Digital Wayfinding Signage</td><td>Helps users find Mobility Hubs, shuttle stops, cycling routes and accessible paths.</td></tr>
+                <tr><td>Pedestrian and Bicycle Counters</td><td>Measures movement patterns and supports future public realm planning.</td></tr>
+                <tr><td>Accessibility Route Mapping</td><td>Supports wheelchair users, vulnerable users and UMMC-related access needs.</td></tr>
+                <tr><td>PMIS Civil Works Monitoring</td><td>Tracks delivery progress, quality and issues for covered walkways, crossings and route upgrades.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-table-block">
+              <h4>UM-Specific Adaptation</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Adaptation Area</th><th>Application to UM</th></tr></thead><tbody>
+                <tr><td>Hot and Humid Climate</td><td>Requires shaded routes, tree-canopy coverage and heat-reduction design.</td></tr>
+                <tr><td>Heavy Rainfall</td><td>Requires covered connections, safe drainage and weather-resilient walking areas.</td></tr>
+                <tr><td>Hilly Terrain</td><td>Requires accessible gradients, safer crossings and better route continuity.</td></tr>
+                <tr><td>Academic Core</td><td>Needs reduced car circulation to improve safety, comfort and campus liveability.</td></tr>
+                <tr><td>UMMC Interface</td><td>Requires controlled access for medical users, emergency vehicles and visitors.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-bottom-card"><h4>Expected Function</h4><p>This layer helps UM reduce excessive car traffic in the academic core, improve pedestrian safety, increase walking and cycling comfort, support accessibility, reduce noise and pollutants, and create a more pleasant campus environment for students, staff, visitors and UMMC-related users.</p></article>
+          </div>
+      `,
+      "vehicle-layer": `
+          <div class="detail-panel-head">
+            <h3>Vehicle Layer: Electric Shuttle Bus Fleet</h3>
+            <p>This layer deploys low-emission transport vehicles to provide reliable alternatives to private cars and motorcycles. It includes electric shuttle buses, four-seat micro-transit, e-bikes and seated e-scooters.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block"><h4>Layer Role</h4><p>To provide UM with a practical zero-emission campus transport fleet that can serve different levels of passenger demand, route density and user mobility needs.</p></article>
+              <article class="detail-copy-block"><h4>Operational Mechanism</h4><p>Vehicle deployment should be adjusted according to campus demand. For example, if new student accommodation is introduced, shuttle routes should be recalibrated before the accommodation opens. The recalibrated route should connect residential clusters, the Main Library, Engineering precinct, UMMC or medical precinct and public transport access points.</p></article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Electric Shuttle Fleet</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Vehicle Type</th><th>Indicative Capacity</th><th>Main Role</th></tr></thead><tbody>
+                  <tr><td>8 m Electric Mini-Bus</td><td>28 passengers</td><td>Low-density routes and feeder services.</td></tr>
+                  <tr><td>12 m Electric Bus</td><td>70 passengers</td><td>Main campus loop and core campus circulation.</td></tr>
+                  <tr><td>18 m Articulated Electric Bus</td><td>Higher passenger capacity</td><td>UMMC peak connection and high-demand corridor.</td></tr>
+                </tbody></table></div>
+              </article>
+              <article class="detail-table-block">
+                <h4>Micro-Mobility and Micro-Transit</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>System</th><th>Technical / Operational Role</th></tr></thead><tbody>
+                  <tr><td>E-Bikes</td><td>Supports first-mile and last-mile trips between hubs, faculties, residential areas and public transport points.</td></tr>
+                  <tr><td>Seated E-Scooters</td><td>Supports short-distance mobility for users who prefer seated micro-mobility.</td></tr>
+                  <tr><td>Four-Seat Electric Micro-Transit</td><td>Supports on-demand movement for selected routes, accessibility needs and lower-density connections.</td></tr>
+                </tbody></table></div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Technical Element</th><th>Function in the Vehicle Layer</th></tr></thead><tbody>
+                <tr><td>LFP Battery System</td><td>Provides thermal stability, safety and longer lifecycle for electric shuttle operations.</td></tr>
+                <tr><td>CCS-2 Charging Compatibility</td><td>Supports standardised charging for electric shuttle buses and EV infrastructure.</td></tr>
+                <tr><td>OCPP 2.0.1 Charging Protocol</td><td>Enables smart charging management and charger interoperability.</td></tr>
+                <tr><td>GPS / Telematics Tracking</td><td>Supports live shuttle tracking, service monitoring and route performance review.</td></tr>
+                <tr><td>Fleet Scheduling System</td><td>Helps coordinate service frequency, vehicle allocation and peak-hour operation.</td></tr>
+                <tr><td>Route Recalibration Data</td><td>Supports route adjustment before new accommodation or demand changes occur.</td></tr>
+                <tr><td>PMIS Fleet Reporting Link</td><td>Feeds fleet reliability, service performance and operational issues into the project dashboard.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-table-block">
+              <h4>UM-Specific Adaptation</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Adaptation Area</th><th>Application to UM</th></tr></thead><tbody>
+                <tr><td>Main Campus Loop</td><td>Served by larger electric bus capacity for regular movement demand.</td></tr>
+                <tr><td>UMMC Peak Connection</td><td>Requires higher-capacity shuttle support during medical-related peak demand.</td></tr>
+                <tr><td>Residential Clusters</td><td>Requires reliable feeder routes and route recalibration when accommodation demand changes.</td></tr>
+                <tr><td>Hilly Campus Conditions</td><td>Requires suitable vehicle power, braking and operational planning.</td></tr>
+                <tr><td>Short-Distance Trips</td><td>Supported by e-bikes, seated e-scooters and micro-transit rather than private cars.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-bottom-card"><h4>Expected Function</h4><p>This layer helps UM provide reliable low-emission mobility, reduce dependence on private vehicles, improve internal connectivity, support UMMC-related movement and create a fleet system that can be monitored and adjusted through digital data.</p></article>
+          </div>
+      `,
+      "energy-backbone": `
+          <div class="detail-panel-head">
+            <h3>Energy Backbone Layer</h3>
+            <p>This layer supports the electrification of UM's mobility system through renewable energy generation, Microgrid management and smart charging control. It ensures that the electric mobility system is supported by cleaner and more reliable energy.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block"><h4>Layer Role</h4><p>To reduce grid electricity pressure, support low-carbon transport operation and improve energy resilience for electric shuttle buses, micro-mobility charging and Mobility Hub operations.</p></article>
+              <article class="detail-copy-block"><h4>Operational Mechanism</h4><p>The energy system should coordinate Solar PV generation, electric shuttle charging, micro-mobility charging, depot energy demand and Mobility Hub electricity use. The Microgrid reduces the risk of sudden power consumption when several electric vehicles charge at the same time.</p></article>
+              <article class="detail-copy-block"><h4>2030 Energy Target</h4><p>By 2030, the core energy aim should cover roughly 2.4 MWp of PV capacity and the operation of Microgrid Phase 1. Post-2030 enhancement may include VPP expansion, second-life battery integration and further charging algorithm optimisation.</p></article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Energy Backbone Components</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Component</th><th>Function</th></tr></thead><tbody>
+                  <tr><td>Canopy Solar PV</td><td>Generates renewable electricity while providing shade and rain protection for selected car parks.</td></tr>
+                  <tr><td>Rooftop Solar PV</td><td>Reduces grid electricity demand across selected campus buildings.</td></tr>
+                  <tr><td>Microgrid Phase 1</td><td>Supports energy stability and coordinated electricity use for mobility charging.</td></tr>
+                  <tr><td>Virtual Power Plant Capability</td><td>Supports future smart coordination of distributed energy resources.</td></tr>
+                  <tr><td>Smart Charging Management</td><td>Prevents abrupt power demand when multiple electric shuttle buses charge at the same time.</td></tr>
+                  <tr><td>Energy Storage / Battery Optimisation</td><td>Supports future energy resilience and charging optimisation.</td></tr>
+                </tbody></table></div>
+              </article>
+              <article class="detail-table-block">
+                <h4>UM Energy Locations</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Location</th><th>Proposed Energy Role</th></tr></thead><tbody>
+                  <tr><td>Main Library Car Park</td><td>Canopy PV and shaded parking support.</td></tr>
+                  <tr><td>Faculty of Engineering Car Park</td><td>Canopy PV and mobility-energy integration.</td></tr>
+                  <tr><td>UMMC Visitor Car Park</td><td>Canopy PV support for high-demand visitor interface.</td></tr>
+                  <tr><td>Faculty of Engineering Building</td><td>Rooftop PV potential.</td></tr>
+                  <tr><td>Faculty of Business and Economics</td><td>Rooftop PV potential.</td></tr>
+                  <tr><td>Main Library</td><td>Rooftop PV and mobility energy support.</td></tr>
+                  <tr><td>UMMC OPD</td><td>Rooftop PV potential.</td></tr>
+                  <tr><td>Residential College Administrative Blocks</td><td>Rooftop PV support for residential mobility areas.</td></tr>
+                </tbody></table></div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Technical Element</th><th>Function in the Energy Backbone Layer</th></tr></thead><tbody>
+                <tr><td>PV Monitoring System</td><td>Tracks solar generation and performance across canopy and rooftop PV assets.</td></tr>
+                <tr><td>Energy Management System</td><td>Coordinates energy use, charging demand and Microgrid operation.</td></tr>
+                <tr><td>Smart Charging Algorithm</td><td>Controls charging timing to reduce peak load and improve energy efficiency.</td></tr>
+                <tr><td>Battery State-of-Health Monitoring</td><td>Tracks battery condition and supports lifecycle management.</td></tr>
+                <tr><td>Virtual Power Plant Interface</td><td>Supports future distributed energy coordination and optimisation.</td></tr>
+                <tr><td>Charging Load Dashboard</td><td>Shows charging demand, energy use and grid pressure.</td></tr>
+                <tr><td>PMIS Energy Reporting Link</td><td>Feeds energy performance and sustainability indicators into project reporting.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-bottom-card"><h4>Expected Function</h4><p>This layer helps UM support electric mobility with cleaner energy, reduce long-term electricity pressure, improve charging reliability, strengthen carbon reporting and prepare the campus for future smart energy optimisation.</p></article>
+          </div>
+      `,
+      "mobility-hub": `
+          <div class="detail-panel-head">
+            <h3>Mobility Hub Layer</h3>
+            <p>This layer provides integrated service points where users can transfer between shuttle services, walking, cycling, micro-transit and EV charging facilities. The hubs connect the physical, digital and user-service parts of the mobility ecosystem.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block"><h4>Layer Role</h4><p>To make sustainable campus mobility more convenient by concentrating transport services, information, charging, safety facilities and user support at key campus access points.</p></article>
+              <article class="detail-copy-block"><h4>Operational Mechanism</h4><p>Mobility Hubs should operate as the transfer interface between demand-side policy, shuttle operations, active mobility, energy infrastructure and digital systems. Users can shift from car, shuttle, walking, cycling or micro-mobility at the hub instead of entering the campus core by private vehicle.</p></article>
+              <article class="detail-copy-block"><h4>Residential Mobility Zone</h4><p>The residential hub should be built as a Residential Mobility Zone. Future student accommodation may create mobility demand that can be supported by one or two Satellite Mobility Points linked to the main residential hub.</p></article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Core Mobility Hub Components</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Component</th><th>Function</th></tr></thead><tbody>
+                  <tr><td>Electric Shuttle Stop</td><td>Provides structured transfer between shuttle routes and campus destinations.</td></tr>
+                  <tr><td>Real-Time Information Screens</td><td>Shows shuttle arrival, service alerts and route guidance.</td></tr>
+                  <tr><td>E-Bike and Seated E-Scooter Rental Points</td><td>Supports first-mile and last-mile movement.</td></tr>
+                  <tr><td>Smart-Lock Systems</td><td>Controls rental, return and asset availability.</td></tr>
+                  <tr><td>EV Charging Facilities</td><td>Supports charging for shuttle, micro-mobility and selected electric vehicles.</td></tr>
+                  <tr><td>Covered Waiting Areas</td><td>Improves user comfort during heat and rain.</td></tr>
+                  <tr><td>Helmet Access</td><td>Supports safer use of shared micro-mobility.</td></tr>
+                  <tr><td>CCTV, Emergency Buttons and First Aid</td><td>Improves user safety and incident response.</td></tr>
+                  <tr><td>Multilingual Digital Signage</td><td>Supports diverse campus users and visitors.</td></tr>
+                  <tr><td>Biodiversity-Friendly Landscaping</td><td>Connects mobility infrastructure with campus sustainability identity.</td></tr>
+                </tbody></table></div>
+              </article>
+              <article class="detail-table-block">
+                <h4>Proposed Hub Locations</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Hub Location</th><th>Function</th></tr></thead><tbody>
+                  <tr><td>Kuala Lumpur Gate</td><td>Main peripheral transfer point and Park-and-Ride connection.</td></tr>
+                  <tr><td>Petaling Jaya Gate</td><td>Vehicle interception and shuttle connection point.</td></tr>
+                  <tr><td>Damansara Gate</td><td>Additional gateway hub for campus access and network distribution.</td></tr>
+                  <tr><td>Residential Mobility Zone</td><td>Supports student accommodation areas and daily residential movement.</td></tr>
+                  <tr><td>Satellite Mobility Points</td><td>Smaller supporting points linked to the main residential hub.</td></tr>
+                </tbody></table></div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>Charging and Safety Provision</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Provision</th><th>Application</th></tr></thead><tbody>
+                <tr><td>CCS-2 Fast Charger</td><td>Supports faster EV charging at major hubs.</td></tr>
+                <tr><td>AC Slow Chargers</td><td>Supports routine charging needs.</td></tr>
+                <tr><td>Covered Waiting Areas</td><td>Protects users from rain and heat.</td></tr>
+                <tr><td>CCTV and Lighting</td><td>Improves perceived and actual safety.</td></tr>
+                <tr><td>Emergency Call Buttons</td><td>Provides rapid response support.</td></tr>
+                <tr><td>First-Aid Supplies</td><td>Supports minor incident response.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Technical Element</th><th>Function in the Mobility Hub Layer</th></tr></thead><tbody>
+                <tr><td>Smart-Lock Rental System</td><td>Controls e-bike and e-scooter rental and return.</td></tr>
+                <tr><td>Real-Time Shuttle Screens</td><td>Displays route, arrival and service status.</td></tr>
+                <tr><td>Hub Availability Dashboard</td><td>Shows available vehicles, helmets, chargers and docking spaces.</td></tr>
+                <tr><td>QR / RFID Helmet Access</td><td>Manages helmet rental and hygiene verification.</td></tr>
+                <tr><td>Charger Monitoring System</td><td>Tracks charger availability and charging status.</td></tr>
+                <tr><td>CCTV and Emergency Alert System</td><td>Supports safety monitoring and incident response.</td></tr>
+                <tr><td>Digital Signage System</td><td>Provides multilingual guidance and mobility instructions.</td></tr>
+                <tr><td>PMIS Hub Performance Link</td><td>Feeds hub utilisation, safety and maintenance indicators into project monitoring.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-bottom-card"><h4>Expected Function</h4><p>This layer helps UM make sustainable travel easier to use, improve first-mile and last-mile access, reduce vehicle pressure at the campus core, support safe transfer between modes and provide visible mobility services for students, staff, UMMC users and visitors.</p></article>
+          </div>
+      `,
+      "digital-layer": `
+          <div class="detail-panel-head">
+            <h3>Digital Layer</h3>
+            <p>This layer enables real-time control, monitoring, booking, reporting and user communication across the mobility ecosystem. It connects physical infrastructure with operational data, user-facing services and project management reporting.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block"><h4>Layer Role</h4><p>To make the UM Green Mobility Project measurable, monitorable and user-responsive through digital platforms, dashboards, sensors and PMIS integration.</p></article>
+              <article class="detail-copy-block"><h4>Operational Mechanism</h4><p>The Digital Layer links user behaviour, transport services, infrastructure performance and project monitoring into one information ecosystem. It allows UM to see how the mobility system performs and how users respond to it.</p></article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Digital Components</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Component</th><th>Function</th></tr></thead><tbody>
+                  <tr><td>UM Mobility App</td><td>Provides user-facing mobility information, booking, guidance and feedback.</td></tr>
+                  <tr><td>PMIS</td><td>Manages project schedule, cost, scope, risk, quality, procurement, documents and reporting.</td></tr>
+                  <tr><td>Digital Twin / Mobility Simulator</td><td>Tracks ridership, emissions reduction, charging demand, parking utilisation and shuttle performance.</td></tr>
+                  <tr><td>Smart Sensor Network</td><td>Collects data from air quality, pedestrian movement, cycling, PV systems, batteries and gate queues.</td></tr>
+                  <tr><td>Carbon Dashboard</td><td>Supports sustainability tracking and carbon-saving communication.</td></tr>
+                  <tr><td>Gate Queue Dashboard</td><td>Monitors access congestion and supports traffic management.</td></tr>
+                </tbody></table></div>
+              </article>
+              <article class="detail-table-block">
+                <h4>UM Mobility App Functions</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>App Function</th><th>User Value</th></tr></thead><tbody>
+                  <tr><td>Real-Time Shuttle Tracking</td><td>Shows shuttle location, waiting time and route status.</td></tr>
+                  <tr><td>E-Bike and E-Scooter Booking</td><td>Supports shared micro-mobility access.</td></tr>
+                  <tr><td>Walking Route Suggestions</td><td>Suggests routes based on shade preference and accessibility needs.</td></tr>
+                  <tr><td>Carbon-Saving Information</td><td>Shows sustainability impact to users.</td></tr>
+                  <tr><td>Helmet Availability and Hygiene Status</td><td>Supports safer and cleaner micro-mobility use.</td></tr>
+                  <tr><td>Emergency Call Function</td><td>Supports user safety.</td></tr>
+                  <tr><td>Multilingual Support</td><td>Supports diverse campus users and visitors.</td></tr>
+                  <tr><td>Accessibility Mode</td><td>Improves usability for users with accessibility needs.</td></tr>
+                  <tr><td>Visitor Access and QR / ANPR Permits</td><td>Supports appointment-based and event-day access management.</td></tr>
+                </tbody></table></div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Technical Element</th><th>Function in the Digital Layer</th></tr></thead><tbody>
+                <tr><td>Mobile App Platform</td><td>Supports booking, tracking, feedback, route guidance and visitor access.</td></tr>
+                <tr><td>PMIS Platform</td><td>Tracks project control areas including schedule, cost, scope, risk, quality and procurement.</td></tr>
+                <tr><td>Digital Twin / Simulator Engine</td><td>Supports scenario testing for ridership, emissions, parking and charging demand.</td></tr>
+                <tr><td>Sensor Network</td><td>Collects operational and environmental data from campus mobility assets.</td></tr>
+                <tr><td>API / Data Integration Layer</td><td>Connects shuttle, parking, charging, app and PMIS data.</td></tr>
+                <tr><td>Dashboard Interface</td><td>Provides visual reporting for UM management and project teams.</td></tr>
+                <tr><td>Data Governance Controls</td><td>Protects data quality, privacy, access and reporting reliability.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-table-block">
+              <h4>Sensor Network</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Sensor / Data Source</th><th>Monitoring Function</th></tr></thead><tbody>
+                <tr><td>Air Quality Sensors</td><td>Tracks environmental impact around mobility corridors.</td></tr>
+                <tr><td>Pedestrian Counters</td><td>Measures walking movement and public realm use.</td></tr>
+                <tr><td>Bicycle Counters</td><td>Measures cycling activity and network utilisation.</td></tr>
+                <tr><td>PV Monitoring</td><td>Tracks renewable energy generation.</td></tr>
+                <tr><td>Battery State-of-Health Monitoring</td><td>Tracks battery performance and lifecycle condition.</td></tr>
+                <tr><td>Gate Queue Dashboards</td><td>Monitors access congestion and boundary pressure.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-bottom-card"><h4>Expected Function</h4><p>This layer helps UM operate the mobility ecosystem with real-time information, improve user experience, monitor sustainability outcomes, support project governance and create an evidence base for future mobility decisions.</p></article>
+          </div>
+      `,
+      "governance-layer": `
+          <div class="detail-panel-head">
+            <h3>Governance Layer</h3>
+            <p>This layer ensures that the UM Smart Green Mobility Ecosystem is delivered, monitored and improved through clear institutional governance, accountability, data control, safety management and sustainability reporting.</p>
+          </div>
+          <div class="detail-panel-layout">
+            <div class="detail-copy">
+              <article class="detail-copy-block"><h4>Layer Role</h4><p>To provide the decision-making, coordination, assurance and continuous improvement structure needed for a complex multi-system campus mobility transformation.</p></article>
+              <article class="detail-copy-block"><h4>Operational Mechanism</h4><p>The Governance Layer links project delivery, stakeholder engagement, safety management, data control and sustainability performance into one oversight system. It ensures that decisions are not made by isolated workstreams but through a structured governance process.</p></article>
+              <article class="detail-copy-block"><h4>Continuous Improvement</h4><p>The Governance Layer should support post-implementation review, dashboard-based performance monitoring, stakeholder feedback loops and periodic updates to routes, pricing, fleet operation, energy systems and digital services.</p></article>
+            </div>
+            <div class="detail-table-stack">
+              <article class="detail-table-block">
+                <h4>Governance Components</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Governance Component</th><th>Function</th></tr></thead><tbody>
+                  <tr><td>Programme Board</td><td>Provides senior decision-making, strategic oversight and stage approval.</td></tr>
+                  <tr><td>Joint PMO</td><td>Coordinates implementation, reporting, workstreams and issue escalation.</td></tr>
+                  <tr><td>Workstream Leads</td><td>Manage specific delivery areas such as mobility, energy, digital, civil works and stakeholder engagement.</td></tr>
+                  <tr><td>Stakeholder Council</td><td>Represents students, staff, UMMC users, visitors, accessibility users and surrounding communities.</td></tr>
+                  <tr><td>Data Council</td><td>Governs data quality, access, privacy, digital reporting and dashboard reliability.</td></tr>
+                  <tr><td>Health and Safety Function</td><td>Oversees safety procedures for hubs, vehicles, micro-mobility and public realm areas.</td></tr>
+                  <tr><td>Carbon Registry Account</td><td>Supports carbon accounting, carbon-credit preparation and sustainability reporting.</td></tr>
+                </tbody></table></div>
+              </article>
+              <article class="detail-table-block">
+                <h4>Technical and Management Enablement</h4>
+                <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Enablement Element</th><th>Function in the Governance Layer</th></tr></thead><tbody>
+                  <tr><td>PMIS Decision Records</td><td>Tracks approvals, issues, changes, risks and governance decisions.</td></tr>
+                  <tr><td>RACI and Responsibility Matrix</td><td>Clarifies accountability for major project decisions.</td></tr>
+                  <tr><td>Risk Register Dashboard</td><td>Supports risk ownership, escalation and mitigation monitoring.</td></tr>
+                  <tr><td>Stakeholder Portal Feedback Log</td><td>Captures user feedback and connects it to project action tracking.</td></tr>
+                  <tr><td>Data Governance Framework</td><td>Manages access, privacy, data quality and dashboard reliability.</td></tr>
+                  <tr><td>Carbon Accounting Tools</td><td>Supports carbon reporting and future carbon-credit pathway preparation.</td></tr>
+                  <tr><td>Safety Incident Reporting System</td><td>Tracks incidents, near-misses and corrective actions.</td></tr>
+                  <tr><td>Stage-Gate Review Records</td><td>Supports formal review before moving between project stages.</td></tr>
+                </tbody></table></div>
+              </article>
+            </div>
+          </div>
+          <div class="detail-bottom">
+            <article class="detail-table-block">
+              <h4>UM-Specific Governance Adaptation</h4>
+              <div class="detail-table-wrap"><table class="detail-table"><thead><tr><th>Governance Need</th><th>Application to UM</th></tr></thead><tbody>
+                <tr><td>Public University Accountability</td><td>Requires transparent reporting, procurement discipline and decision records.</td></tr>
+                <tr><td>Multiple User Groups</td><td>Requires structured representation of students, staff, UMMC users, visitors and accessibility users.</td></tr>
+                <tr><td>Multi-System Delivery</td><td>Requires coordination across transport, energy, digital, civil works and operations.</td></tr>
+                <tr><td>Sustainability Claims</td><td>Requires measurable carbon, energy, ridership and social value reporting.</td></tr>
+                <tr><td>Safety and Public Visibility</td><td>Requires clear health and safety procedures for hubs, vehicles and active mobility systems.</td></tr>
+              </tbody></table></div>
+            </article>
+            <article class="detail-bottom-card"><h4>Expected Function</h4><p>This layer helps UM maintain accountable decision-making, reduce delivery risk, coordinate multiple workstreams, manage stakeholder trust, protect data quality, strengthen safety control and ensure that the mobility ecosystem continues to improve after implementation.</p></article>
+          </div>
+      `
+    };
+
+    const compactMobilityLayerData = {
+      "demand-policy": {
+        title: "Demand-side Policy Layer",
+        intro: "This layer manages vehicle demand before it becomes campus congestion.",
+        role: "Reduce over-dependence on private cars and motorcycles by controlling access, managing parking demand and redirecting vehicles before they reach congested campus areas.",
+        components: ["Parking reform", "Peak-hour pricing", "Five-tier sticker system", "Park-and-Ride", "Event mobility protocol"],
+        technical: [
+          ["ANPR", "Pre-verifies registered vehicles before they reach the campus gate."],
+          ["Digital parking sticker database", "Links user category, vehicle type, pricing tier and access entitlement."],
+          ["QR temporary permit system", "Supports visitor, VIP, disabled visitor, logistics and event-day access."],
+          ["Gate queue dashboard", "Tracks access pressure and supports operational adjustment."],
+          ["PMIS reporting link", "Feeds access, parking and event mobility data into project monitoring."]
+        ],
+        adaptation: "Applied to Kuala Lumpur Gate, Petaling Jaya Gate, UMMC Interface and the campus core so UM can intercept unnecessary vehicles before they create congestion.",
+        expected: "Reduces parking pressure, limits unnecessary vehicle circulation, manages gate congestion and prepares users to shift towards shuttles, active mobility and Mobility Hubs."
+      },
+      "active-mobility": {
+        title: "Active Mobility Layer",
+        intro: "This layer makes short campus trips easier to complete without private vehicles.",
+        role: "Support walking, cycling and micro-mobility through safe, accessible and connected routes across UM.",
+        components: ["Covered walkways", "E-bike sharing", "Seated e-scooters", "Secure docking", "Helmet hygiene support"],
+        technical: [
+          ["Smart docking", "Controls rental, return and availability of shared active mobility assets."],
+          ["Smart locks", "Secures vehicles and supports app-based rental control."],
+          ["E-bike system", "Supports first-mile and last-mile campus trips."],
+          ["Seated e-scooter system", "Supports flexible short-distance trips and users who prefer seated mobility."],
+          ["Helmet hygiene cabinet", "Provides cleaner helmet access through controlled storage and hygiene status."],
+          ["Cycle counters", "Measures usage patterns for route planning and performance monitoring."],
+          ["Lighting and CCTV", "Improves safety along routes, docks and waiting areas."]
+        ],
+        adaptation: "Prioritised for residential colleges, faculty clusters, the library area, UMMC-related movement and hilly or high-demand campus links.",
+        expected: "Reduces short-distance car trips, improves first-mile and last-mile access and makes active mobility more comfortable in UM's tropical campus context."
+      },
+      "public-realm": {
+        title: "Public Realm Layer",
+        intro: "This layer improves the physical campus environment that supports everyday movement.",
+        role: "Make walking, cycling, shuttle access and micro-mobility safer, shaded, readable and more attractive than unnecessary car circulation.",
+        components: ["Shaded routes", "Safe crossings", "Accessible paths", "Wayfinding", "Public-realm comfort upgrades"],
+        technical: [
+          ["Anti-skid surfaces", "Improves walking and cycling safety during rain."],
+          ["Monsoon-friendly drainage", "Reduces water accumulation and supports all-weather mobility."],
+          ["Lighting", "Improves visibility and perceived safety."],
+          ["CCTV", "Supports safety monitoring around high-use corridors."],
+          ["Safe crossings", "Improves pedestrian priority at road interfaces."],
+          ["Digital wayfinding", "Guides users to hubs, shuttle stops, cycling routes and accessible paths."],
+          ["Accessibility route mapping", "Supports wheelchair users, vulnerable users and UMMC-related access needs."]
+        ],
+        adaptation: "Designed around UM's heat, heavy rainfall, hilly terrain, academic core circulation and UMMC interface needs.",
+        expected: "Improves pedestrian safety, walking comfort, accessibility and campus liveability while reducing car dominance in the academic core."
+      },
+      "vehicle-layer": {
+        title: "Vehicle Layer: Electric Shuttle Bus Fleet",
+        intro: "This layer provides the zero-emission fleet backbone for internal campus movement.",
+        role: "Offer reliable low-emission transport options for different route demands, passenger volumes and accessibility needs.",
+        components: ["8 m electric mini-bus", "12 m electric bus", "18 m articulated electric bus", "Four-seat micro-transit", "Fleet scheduling"],
+        technical: [
+          ["8 m electric mini-bus", "Serves feeder routes and lower-demand links."],
+          ["12 m electric bus", "Serves main campus loop and regular internal circulation."],
+          ["18 m articulated electric bus", "Supports higher-demand corridors and UMMC peak connections."],
+          ["Four-seat micro-transit", "Provides flexible movement for selected lower-density or accessibility trips."],
+          ["LFP battery", "Supports safer thermal performance and lifecycle reliability."],
+          ["CCS-2 charging", "Supports standardised electric bus charging."],
+          ["OCPP 2.0.1", "Enables smart charging interoperability."],
+          ["GPS / telematics", "Supports live tracking, route performance and PMIS reporting."]
+        ],
+        adaptation: "Fleet sizing is matched to UM's campus loop, UMMC peak connection, residential clusters, hilly terrain and future accommodation growth.",
+        expected: "Improves internal connectivity, reduces private vehicle reliance and creates a monitorable electric transport service for campus users."
+      },
+      "energy-backbone": {
+        title: "Energy Backbone Layer",
+        intro: "This layer supports the electrified mobility system with cleaner energy and charging control.",
+        role: "Reduce grid pressure, support low-carbon operation and improve energy resilience for shuttles, micro-mobility and Mobility Hubs.",
+        components: ["Canopy PV", "Rooftop PV", "Microgrid Phase 1", "Smart charging", "Battery lifecycle monitoring"],
+        technical: [
+          ["Canopy PV", "Generates clean energy while providing shade at selected parking and hub areas."],
+          ["Rooftop PV", "Uses selected campus roofs for distributed renewable generation."],
+          ["2.4 MWp PV target", "Sets the core solar PV scale for the project proposal."],
+          ["Microgrid Phase 1", "Coordinates energy use for charging and mobility assets."],
+          ["Smart charging", "Controls charging timing to reduce peak demand."],
+          ["VPP capability", "Supports future optimisation of distributed energy resources."],
+          ["Battery state-of-health monitoring", "Tracks lifecycle condition and replacement planning."]
+        ],
+        adaptation: "Applied to selected car parks, rooftops, depots and Mobility Hubs where UM can combine shade, charging and renewable energy value.",
+        expected: "Supports cleaner electric mobility, reduces energy pressure and strengthens carbon reporting for UM's sustainability direction."
+      },
+      "mobility-hub": {
+        title: "Mobility Hub Layer",
+        intro: "This layer concentrates mobility services at clear transfer points across campus.",
+        role: "Link shuttle stops, parking areas, walking routes, micro-mobility access, charging and user information into organised transfer hubs.",
+        components: ["Gateway hubs", "Residential Mobility Zone", "Satellite mobility points", "Transfer information", "Charging and safety support"],
+        technical: [
+          ["Real-time information screens", "Shows route, arrival and service alerts."],
+          ["Smart-lock rental system", "Controls rental and return of shared mobility assets."],
+          ["EV charging", "Supports hub-based charging for mobility services."],
+          ["Helmet access", "Provides controlled safety equipment access for micro-mobility users."],
+          ["CCTV", "Supports safety monitoring around hubs."],
+          ["Emergency call buttons", "Improves incident response."],
+          ["Digital signage", "Supports wayfinding and user guidance."],
+          ["Hub availability dashboard", "Shows vehicle, helmet, charging and docking availability."]
+        ],
+        adaptation: "Applied through KL Gate, PJ Gate, Damansara Gate, Residential Mobility Zone and smaller satellite mobility points.",
+        expected: "Improves transfer convenience, reduces fragmented movement and makes sustainable travel more visible and easier to use."
+      },
+      "digital-layer": {
+        title: "Digital Layer",
+        intro: "This layer connects user information, operations data and project management monitoring.",
+        role: "Make the UM Green Mobility Project measurable, responsive and transparent through app, dashboard, sensor and PMIS integration.",
+        components: ["UM Mobility App", "PMIS", "Digital Twin / Mobility Simulator", "Smart sensors", "Dashboards and APIs"],
+        technical: [
+          ["UM Mobility App", "Supports tracking, booking, guidance, alerts and feedback."],
+          ["PMIS", "Tracks schedule, cost, scope, risk, quality, procurement and reporting."],
+          ["Digital Twin / Mobility Simulator", "Supports scenario testing for ridership, emissions, parking and charging demand."],
+          ["Smart sensors", "Collects mobility, environmental, energy and usage data."],
+          ["Carbon dashboard", "Communicates sustainability indicators and carbon performance."],
+          ["Gate queue dashboard", "Monitors access congestion and operational pressure."],
+          ["API / data integration", "Connects shuttle, parking, charging, app and PMIS data."]
+        ],
+        adaptation: "Configured for UM management reporting, stakeholder communication, accessibility needs, event-day mobility and sustainability performance tracking.",
+        expected: "Improves operational visibility, user experience, evidence-based decisions and long-term monitoring of the mobility ecosystem."
+      },
+      "governance-layer": {
+        title: "Governance Layer",
+        intro: "This layer defines how the multi-system project is governed, reported and improved.",
+        role: "Provide decision-making, coordination, accountability, safety, data control and continuous improvement for the full programme.",
+        components: ["Programme Board", "Joint PMO", "Workstream Leads", "Stakeholder Council", "Data Council"],
+        technical: [
+          ["Programme Board", "Provides senior governance and stage approval."],
+          ["Joint PMO", "Coordinates implementation, reporting and issue escalation."],
+          ["Workstream Leads", "Manage delivery areas such as mobility, energy, digital, civil works and engagement."],
+          ["Stakeholder Council", "Represents students, staff, UMMC users, visitors, accessibility users and surrounding communities."],
+          ["Data Council", "Controls data quality, access, privacy and dashboard reliability."],
+          ["Health and safety reporting", "Tracks incidents, near-misses and corrective actions."],
+          ["Carbon accounting tools", "Supports carbon reporting and future carbon-credit preparation."],
+          ["PMIS decision records", "Stores approvals, risks, changes and governance decisions."]
+        ],
+        adaptation: "Designed for public university accountability, multiple user groups, multi-system delivery, visible sustainability claims and long-term operational improvement.",
+        expected: "Reduces delivery risk, clarifies accountability, strengthens stakeholder trust and keeps the mobility ecosystem improving after implementation."
+      }
+    };
+
+    function renderDetailChips(items) {
+      return items.map((item) => `<span class="detail-chip">${item}</span>`).join("");
+    }
+
+    function renderTechnicalRows(items) {
+      return items.map(([element, functionText]) => `<tr><td><strong>${element}</strong></td><td>${functionText}</td></tr>`).join("");
+    }
+
+    function renderCompactLayerDetail(layer) {
+      return `
+        <div class="detail-panel-head">
+          <h3>${layer.title}</h3>
+          <p>${layer.intro}</p>
+        </div>
+        <div class="detail-panel-layout">
+          <div class="detail-copy">
+            <article class="detail-copy-block">
+              <h4>Layer Role</h4>
+              <p>${layer.role}</p>
+            </article>
+            <article class="detail-copy-block">
+              <h4>UM-Specific Adaptation</h4>
+              <p>${layer.adaptation}</p>
+            </article>
+            <article class="detail-copy-block">
+              <h4>Expected Function</h4>
+              <p>${layer.expected}</p>
+            </article>
+          </div>
+          <div class="detail-table-stack">
+            <article class="detail-table-block">
+              <h4>Key Components</h4>
+              <div class="detail-chip-list">${renderDetailChips(layer.components)}</div>
+            </article>
+            <article class="detail-table-block">
+              <h4>Technical Enablement</h4>
+              <div class="detail-table-wrap">
+                <table class="detail-table">
+                  <thead><tr><th>Technical Element</th><th>Project Function</th></tr></thead>
+                  <tbody>${renderTechnicalRows(layer.technical)}</tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+        </div>
+      `;
+    }
+
+    const visualMobilityLayerDetails = Object.fromEntries(
+      Object.entries(compactMobilityLayerData).map(([layerId, layer]) => [layerId, renderCompactLayerDetail(layer)])
+    );
+
+    let activeLayerId = null;
+
+    function canUseTapFlip() {
+      return window.matchMedia("(hover: none), (pointer: coarse), (max-width: 920px)").matches;
+    }
+
+    function blurActiveElement() {
+      if (document.activeElement && typeof document.activeElement.blur === "function") {
+        document.activeElement.blur();
+      }
+    }
+
+    function setLayerFlip(card, isFlipped) {
+      if (!card) return;
+      card.classList.toggle("is-flipped", isFlipped);
+      card.setAttribute("aria-expanded", isFlipped ? "true" : "false");
+    }
+
+    function clearLayerFlips(exceptCard) {
+      layerCards.forEach((card) => {
+        if (card !== exceptCard) setLayerFlip(card, false);
+      });
+    }
+
+    function updateLayerControls(layerId) {
+      const activeIndex = mobilityLayerOrder.indexOf(layerId);
+      if (prevLayerButton) {
+        prevLayerButton.disabled = activeIndex <= 0;
+      }
+      if (nextLayerButton) {
+        nextLayerButton.disabled = activeIndex < 0 || activeIndex >= mobilityLayerOrder.length - 1;
+      }
+    }
+
+    function renderLayerDetail(layerId, shouldScroll = true) {
+      const detailMarkup = visualMobilityLayerDetails[layerId] || mobilityLayerDetails[layerId];
+      if (!mobilityDetailPanel || !mobilityDetailContent || !detailMarkup) return;
+      activeLayerId = layerId;
+      mobilityDetailContent.innerHTML = detailMarkup;
+      layerCards.forEach((card) => {
+        card.classList.toggle("active", card.dataset.layerCard === layerId);
+        setLayerFlip(card, false);
+      });
+      updateLayerControls(layerId);
+      mobilityDetailPanel.classList.add("is-visible");
+      mobilityDetailPanel.setAttribute("aria-hidden", "false");
+      if (shouldScroll) {
+        mobilityDetailPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function showLayerDetails(layerId, event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      blurActiveElement();
+      renderLayerDetail(layerId, true);
+    }
+
+    layerDetailTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        const layerId = trigger.dataset.layerDetailTrigger || trigger.closest("[data-layer-card]")?.dataset.layerCard;
+        showLayerDetails(layerId, event);
+      });
+    });
+
+    layerCards.forEach((card) => {
+      card.addEventListener("click", (event) => {
+        if (!canUseTapFlip() || event.target.closest("[data-layer-detail-trigger]")) return;
+        if (card.classList.contains("is-flipped")) {
+          showLayerDetails(card.dataset.layerCard, event);
+          return;
+        }
+        const shouldFlip = !card.classList.contains("is-flipped");
+        clearLayerFlips(card);
+        setLayerFlip(card, shouldFlip);
+      });
+
+      card.addEventListener("keydown", (event) => {
+        if ((event.key === "Enter" || event.key === " ") && event.target === card) {
+          event.preventDefault();
+          const shouldFlip = !card.classList.contains("is-flipped");
+          clearLayerFlips(card);
+          setLayerFlip(card, shouldFlip);
+        }
+
+        if (event.key === "Escape") {
+          setLayerFlip(card, false);
+          blurActiveElement();
+        }
+      });
+
+      card.addEventListener("mouseleave", () => {
+        setLayerFlip(card, false);
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest("[data-layer-card]")) {
+        clearLayerFlips();
+      }
+    });
+
+    if (backToLayers && mobilityLayerGrid) {
+      backToLayers.addEventListener("click", () => {
+        clearLayerFlips();
+        mobilityLayerGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    if (prevLayerButton) {
+      prevLayerButton.addEventListener("click", () => {
+        const activeIndex = mobilityLayerOrder.indexOf(activeLayerId);
+        if (activeIndex > 0) renderLayerDetail(mobilityLayerOrder[activeIndex - 1], true);
+      });
+    }
+
+    if (nextLayerButton) {
+      nextLayerButton.addEventListener("click", () => {
+        const activeIndex = mobilityLayerOrder.indexOf(activeLayerId);
+        if (activeIndex >= 0 && activeIndex < mobilityLayerOrder.length - 1) {
+          renderLayerDetail(mobilityLayerOrder[activeIndex + 1], true);
+        }
+      });
+    }
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

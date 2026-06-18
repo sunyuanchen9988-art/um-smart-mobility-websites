@@ -1,0 +1,1373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Our Services | TerraNexus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --deep: #00506b;
+      --deep-2: #063846;
+      --deep-3: #08242b;
+      --copper: #b87c57;
+      --copper-2: #d39a75;
+      --sand: #eeece8;
+      --paper: #fbfaf7;
+      --ink: #2c2c2c;
+      --muted: #687174;
+      --line: rgba(44, 44, 44, 0.14);
+      --white: #ffffff;
+      --max: 1328px;
+      --gutter: clamp(20px, 3.9vw, 56px);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--sand);
+      color: var(--ink);
+      font-family: "IBM Plex Sans", Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      letter-spacing: 0;
+    }
+
+    body.locked {
+      overflow: hidden;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 38px var(--gutter) 24px;
+      color: var(--white);
+      transition: background 220ms ease, padding 220ms ease, box-shadow 220ms ease;
+    }
+
+    .site-header.scrolled,
+    .site-header.menu-open {
+      padding-top: 18px;
+      padding-bottom: 18px;
+      background: rgba(0, 80, 107, 0.94);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      min-width: clamp(182px, 16vw, 238px);
+      height: 58px;
+      line-height: 1;
+    }
+
+    .brand-logo {
+      width: clamp(182px, 16vw, 238px);
+      height: auto;
+      display: block;
+      overflow: visible;
+      opacity: 0.98;
+      transform: translateY(1px);
+    }
+
+    .site-header.scrolled .brand-logo,
+    .site-header.menu-open .brand-logo {
+      opacity: 0.98;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(18px, 1.8vw, 32px);
+      margin-left: auto;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      position: relative;
+      padding: 8px 0;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      opacity: 0.96;
+    }
+
+    .nav-link.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 2px;
+      background: var(--white);
+    }
+
+    .dropdown {
+      position: absolute;
+      top: 100%;
+      left: -22px;
+      z-index: 999;
+      min-width: 286px;
+      padding: 16px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .dropdown::before {
+      content: "";
+      position: absolute;
+      top: -18px;
+      left: 0;
+      right: 0;
+      height: 18px;
+    }
+
+    .dropdown a {
+      position: relative;
+      z-index: 2;
+      display: block;
+      padding: 9px 8px;
+      border-bottom: 1px solid rgba(0, 80, 107, 0.12);
+      font-size: 13px;
+      color: var(--deep);
+    }
+
+    .nav-item:hover .dropdown,
+    .nav-item:focus-within .dropdown {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .icon-button {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      border-radius: 50%;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 44px;
+      padding: 0 18px 0 22px;
+      border: 0;
+      border-radius: 999px;
+      color: var(--white);
+      background: var(--copper-2);
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 9px 20px rgba(55, 33, 22, 0.14);
+    }
+
+    .icon-round {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      color: var(--copper);
+      background: var(--white);
+      flex: 0 0 auto;
+    }
+
+    .menu-toggle {
+      display: none;
+    }
+
+    .page-hero {
+      position: relative;
+      min-height: clamp(420px, 46vw, 520px);
+      color: var(--white);
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.72), rgba(0, 80, 107, 0.22)),
+        linear-gradient(0deg, rgba(0, 32, 43, 0.46), rgba(0, 0, 0, 0.1)),
+        url("../assets/services/terranexus_services_hero_green_mobility.png") center / cover;
+      overflow: hidden;
+    }
+
+    .page-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 78% 32%, rgba(255, 255, 255, 0.13), transparent 0 26%, transparent 27%);
+      pointer-events: none;
+    }
+
+    .container {
+      width: min(100% - (var(--gutter) * 2), var(--max));
+      margin: 0 auto;
+    }
+
+    .page-hero .container {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: end;
+      min-height: clamp(420px, 46vw, 520px);
+      padding: 116px 0 48px;
+    }
+
+    .page-hero h1 {
+      max-width: 880px;
+      margin: 0 0 16px;
+      color: var(--white);
+      font-size: clamp(42px, 4.5vw, 64px);
+      line-height: 1;
+      font-weight: 700;
+    }
+
+    .hero-subtitle {
+      max-width: 720px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: clamp(16px, 1.5vw, 19px);
+      font-weight: 600;
+    }
+
+    .page-hero .service-tags {
+      margin-top: 22px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .breadcrumb a {
+      color: var(--white);
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--copper);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--deep);
+      font-size: clamp(34px, 3.7vw, 54px);
+      line-height: 1.08;
+      font-weight: 700;
+    }
+
+    .intro {
+      color: var(--white);
+      background: var(--deep-3);
+    }
+
+    .intro-banner {
+      position: relative;
+      min-height: 380px;
+      display: grid;
+      align-items: end;
+      padding: clamp(60px, 8vw, 104px) 0;
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.92), rgba(0, 80, 107, 0.58)),
+        linear-gradient(0deg, rgba(0, 32, 43, 0.68), rgba(0, 0, 0, 0.08)),
+        url("https://images.unsplash.com/photo-1494522855154-9297ac14b55f?auto=format&fit=crop&w=2200&q=85") center / cover;
+      overflow: hidden;
+    }
+
+    .intro-content {
+      max-width: 760px;
+    }
+
+    .intro-content h2 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: 1.05;
+    }
+
+    .intro-content p {
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: clamp(16px, 1.4vw, 19px);
+    }
+
+    .service-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .service-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 13px;
+      color: var(--white);
+      background: rgba(184, 124, 87, 0.82);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .services-list {
+      padding: clamp(74px, 8vw, 120px) 0;
+      background: var(--paper);
+    }
+
+    .services-list .container {
+      position: relative;
+    }
+
+    .service-anchor {
+      position: absolute;
+      top: -110px;
+      left: 0;
+      width: 1px;
+      height: 1px;
+      pointer-events: none;
+      scroll-margin-top: 110px;
+    }
+
+    .capability-head {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.52fr) minmax(0, 0.82fr);
+      gap: clamp(34px, 6vw, 82px);
+      align-items: end;
+      margin-bottom: 38px;
+    }
+
+    .capability-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .tabbed-services {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.38fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .service-tabs {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .service-tab {
+      min-height: 78px;
+      padding: 16px 18px;
+      border: 1px solid rgba(0, 80, 107, 0.14);
+      border-left: 3px solid transparent;
+      color: var(--deep);
+      background: var(--white);
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-align: left;
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease, color 180ms ease;
+    }
+
+    .service-tab.active,
+    .service-tab:hover {
+      border-left-color: var(--copper);
+      color: var(--white);
+      background: var(--deep);
+      transform: translateX(3px);
+    }
+
+    .service-stage {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+      color: var(--white);
+      background: var(--deep-3);
+    }
+
+    .service-stage-bg {
+      position: absolute;
+      inset: 0;
+      opacity: 0.56;
+      background-image: var(--service-image);
+      background-size: cover;
+      background-position: center;
+      transition: opacity 220ms ease;
+    }
+
+    .service-stage::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0, 32, 43, 0.94), rgba(0, 80, 107, 0.42) 62%, rgba(0, 0, 0, 0.1));
+    }
+
+    .service-stage-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: end;
+      min-height: 560px;
+      max-width: 780px;
+      padding: clamp(30px, 5vw, 60px);
+    }
+
+    .service-stage-content h2 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(32px, 3.4vw, 54px);
+      line-height: 1.05;
+    }
+
+    .service-stage-content p {
+      margin: 16px 0 0;
+      max-width: 650px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 16px;
+    }
+
+    .service-bullets {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 30px 0 34px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .service-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      min-height: 44px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.11);
+      font-weight: 700;
+    }
+
+    .service-bullets li::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      margin-top: 9px;
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
+      flex: 0 0 auto;
+    }
+
+    .delivery-model {
+      padding: clamp(74px, 8vw, 116px) 0;
+      background: var(--sand);
+    }
+
+    .delivery-head {
+      max-width: 780px;
+      margin-bottom: 38px;
+    }
+
+    .delivery-head p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .delivery-flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .delivery-step {
+      position: relative;
+      min-height: 230px;
+      padding: 24px;
+      background: var(--white);
+      border-top: 3px solid var(--copper);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.05);
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .delivery-step:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 54px rgba(0, 0, 0, 0.1);
+    }
+
+    .delivery-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 40px;
+      right: -18px;
+      z-index: 2;
+      width: 18px;
+      height: 2px;
+      background: var(--copper);
+    }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      margin-bottom: 22px;
+      color: var(--white);
+      background: var(--deep);
+      font-weight: 700;
+    }
+
+    .delivery-step h3 {
+      margin: 0 0 10px;
+      color: var(--deep);
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .delivery-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14.5px;
+    }
+
+    .cta-band {
+      color: var(--white);
+      background:
+        linear-gradient(90deg, rgba(0, 32, 43, 0.96), rgba(0, 80, 107, 0.78)),
+        url("https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=2200&q=85") center / cover;
+    }
+
+    .cta-band .container {
+      display: grid;
+      grid-template-columns: minmax(0, 0.74fr) auto;
+      align-items: center;
+      gap: 30px;
+      min-height: 320px;
+      padding: clamp(54px, 7vw, 90px) 0;
+    }
+
+    .cta-band h2 {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(28px, 3vw, 46px);
+      line-height: 1.08;
+    }
+
+    .cta-copy {
+      max-width: 760px;
+    }
+
+    .cta-copy p {
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 16px;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .pill.secondary {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: none;
+      outline: 1px solid rgba(255, 255, 255, 0.26);
+    }
+
+    .site-footer {
+      color: rgba(255, 255, 255, 0.84);
+      background: var(--deep-3);
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1.35fr repeat(5, minmax(120px, 1fr));
+      gap: 30px;
+      padding: 72px 0 54px;
+    }
+
+    .footer-brand {
+      color: var(--white);
+      max-width: 280px;
+    }
+
+    .footer-name {
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(26px, 2.4vw, 36px);
+      line-height: 1.08;
+      font-weight: 700;
+    }
+
+    .footer-brand p {
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .footer-col h4 {
+      margin: 0 0 18px;
+      color: var(--white);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .footer-col a,
+    .footer-col span {
+      display: block;
+      margin: 0 0 10px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 22px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 13px;
+    }
+
+    .overlay {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: none;
+      background: rgba(4, 22, 28, 0.62);
+      backdrop-filter: blur(6px);
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .side-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(100%, 560px);
+      min-height: 100%;
+      padding: 78px clamp(24px, 4vw, 54px);
+      color: var(--ink);
+      background: var(--paper);
+      box-shadow: -18px 0 54px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      animation: slideIn 240ms ease forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--deep-3);
+    }
+
+    .panel-title {
+      margin: 0 0 12px;
+      color: var(--deep);
+      font-size: 34px;
+      line-height: 1.15;
+    }
+
+    .panel-copy {
+      margin: 0 0 28px;
+      color: var(--muted);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-grid input,
+    .form-grid textarea {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 16px;
+      border: 1px solid rgba(0, 80, 107, 0.18);
+      border-radius: 0;
+      color: var(--ink);
+      background: var(--white);
+    }
+
+    .form-grid textarea {
+      min-height: 118px;
+      padding-top: 14px;
+      resize: vertical;
+    }
+
+    .human-check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .search-panel {
+      width: min(100% - 40px, 900px);
+      margin: 16vh auto 0;
+      padding: clamp(30px, 5vw, 58px);
+      color: var(--white);
+      background: var(--deep);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.28);
+    }
+
+    .search-panel label {
+      display: block;
+      margin-bottom: 18px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .search-panel input {
+      width: 100%;
+      min-height: 70px;
+      padding: 0 18px;
+      border: 0;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      font-size: clamp(24px, 4vw, 52px);
+      font-weight: 700;
+      outline: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    @media (max-width: 1120px) {
+      .main-nav,
+      .header-actions .pill {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: inline-grid;
+      }
+
+      .main-nav.open {
+        position: fixed;
+        top: 84px;
+        left: var(--gutter);
+        right: var(--gutter);
+        display: grid;
+        gap: 0;
+        padding: 18px;
+        color: var(--ink);
+        background: var(--paper);
+        box-shadow: 0 22px 54px rgba(0, 0, 0, 0.2);
+      }
+
+      .main-nav.open .nav-item {
+        border-bottom: 1px solid rgba(0, 80, 107, 0.14);
+      }
+
+      .main-nav.open .nav-link {
+        display: flex;
+        justify-content: space-between;
+        padding: 11px 2px;
+      }
+
+      .main-nav.open .dropdown {
+        position: static;
+        display: block;
+        box-shadow: none;
+        opacity: 1;
+        pointer-events: auto;
+        transform: none;
+        padding: 0 0 10px 10px;
+        background: transparent;
+      }
+    }
+
+    @media (max-width: 1240px) {
+      .footer-top {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 920px) {
+      :root {
+        --gutter: 16px;
+      }
+
+      .site-header {
+        padding-top: 22px;
+      }
+
+      .brand {
+        min-width: auto;
+      }
+
+      .page-hero,
+      .page-hero .container {
+        min-height: auto;
+      }
+
+      .page-hero .container {
+        padding: 128px 0 48px;
+      }
+
+      .capability-head,
+      .tabbed-services,
+      .cta-band .container,
+      .footer-top {
+        grid-template-columns: 1fr;
+      }
+
+      .service-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .service-tab {
+        min-height: 74px;
+      }
+
+      .delivery-flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .delivery-step:not(:last-child)::after {
+        display: none;
+      }
+
+      .cta-actions {
+        justify-content: flex-start;
+      }
+
+      .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .header-actions {
+        gap: 8px;
+      }
+
+      .brand {
+        min-width: 174px;
+        height: 46px;
+      }
+
+      .brand-logo {
+        width: 174px;
+      }
+
+      .icon-button {
+        width: 38px;
+        height: 38px;
+      }
+
+      .page-hero h1 {
+        font-size: 48px;
+      }
+
+      .service-tabs,
+      .service-bullets,
+      .delivery-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .service-stage,
+      .service-stage-content {
+        min-height: 620px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header" data-header>
+    <a class="brand" href="../index.html#top" aria-label="TerraNexus home">
+      <svg class="brand-logo" viewBox="0 0 430 108" role="img" aria-label="TerraNexus Mobility Consultancy Sdn Bhd">
+        <defs>
+          <linearGradient id="tn-green" x1="18" y1="20" x2="118" y2="92" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#22a85d"/>
+            <stop offset="1" stop-color="#006c40"/>
+          </linearGradient>
+          <linearGradient id="tn-blue" x1="82" y1="20" x2="156" y2="90" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#20a9ef"/>
+            <stop offset="1" stop-color="#0d4f9c"/>
+          </linearGradient>
+          <linearGradient id="tn-terra" x1="178" y1="20" x2="287" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#158244"/>
+            <stop offset="1" stop-color="#27a260"/>
+          </linearGradient>
+          <linearGradient id="tn-nexus" x1="288" y1="20" x2="422" y2="56" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#1f86d2"/>
+            <stop offset="1" stop-color="#0f549f"/>
+          </linearGradient>
+        </defs>
+        <g>
+          <path d="M91 24C77 13 55 12 38 23C15 38 9 70 25 91C38 108 64 109 88 94" fill="none" stroke="url(#tn-green)" stroke-width="16" stroke-linecap="square"/>
+          <path d="M79 84C92 98 113 103 131 94C154 82 162 50 146 28C133 10 108 10 83 24" fill="none" stroke="url(#tn-blue)" stroke-width="16" stroke-linecap="square"/>
+          <circle cx="113" cy="57" r="32" fill="none" stroke="#60b8ec" stroke-width="1.8" opacity="0.85"/>
+          <path d="M84 57h58M113 25c-10 11-15 22-15 32s5 21 15 32M113 25c10 11 15 22 15 32s-5 21-15 32" fill="none" stroke="#7ec8f5" stroke-width="1" opacity="0.7"/>
+          <path d="M102 41c0-9 7-16 16-16s16 7 16 16c0 12-16 31-16 31s-16-19-16-31z" fill="#094b73"/>
+          <circle cx="118" cy="41" r="6" fill="#e8f7ff"/>
+          <path d="M34 81c15-7 34-8 50-2M37 88c14-5 31-5 45 0" fill="none" stroke="#e9fff4" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+          <path d="M42 74V56l5-11 5 11v18M55 74V49l6-15 6 15v25M72 74V58h8v16" fill="none" stroke="#dff8ea" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M24 98c30 5 76 5 132 0" fill="none" stroke="#1d8f80" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+        </g>
+        <g>
+          <text x="179" y="48" font-family="IBM Plex Sans, Arial, sans-serif" font-size="40" font-weight="700" letter-spacing="-1">
+            <tspan fill="url(#tn-terra)">Terra</tspan><tspan fill="url(#tn-nexus)">Nexus</tspan>
+          </text>
+          <text x="184" y="73" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="5" fill="#d6dde1">MOBILITY CONSULTANCY</text>
+          <line x1="184" y1="88" x2="254" y2="88" stroke="#19a978" stroke-width="2"/>
+          <text x="274" y="93" font-family="IBM Plex Sans, Arial, sans-serif" font-size="13" font-weight="600" letter-spacing="5" fill="#d6dde1">SDN BHD</text>
+          <line x1="354" y1="88" x2="424" y2="88" stroke="#258fe5" stroke-width="2"/>
+        </g>
+      </svg>
+    </a>
+
+    <nav class="main-nav" data-nav aria-label="Main navigation">
+      <div class="nav-item"><a class="nav-link" href="../index.html#top">HOME</a></div>
+      <div class="nav-item">
+        <a class="nav-link" href="../index.html#about">ABOUT US <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../index.html#about">About TerraNexus</a>
+          <a href="../index.html#strategy">Corporate Strategy Map</a>
+          <a href="../index.html#team">Project Delivery Team</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link active" href="../our-services/index.html">SERVICES <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../our-services/index.html#sustainable-mobility">Sustainable Mobility Strategy</a>
+          <a href="../our-services/index.html#technical-project-management">Technical Studies &amp; Project Management</a>
+          <a href="../our-services/index.html#governance-procurement">Governance &amp; Regulatory Advice</a>
+          <a href="../our-services/index.html#implementation-monitoring">Implementation &amp; Smart Monitoring</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="../um-project/index.html">UM PROJECT <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../um-project/index.html#glance">Project Overview</a>
+          <a href="../um-project/index.html#mobility-solution">Mobility Solution</a>
+          <a href="../um-project/index.html#project-management">Project Management Framework</a>
+          <a href="../um-project/index.html#commercial-value">Commercial Value</a>
+          <a href="../um-project/index.html#outcomes">Expected Outcomes</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="../stakeholder-portal/index.html#top">STAKEHOLDER PORTAL <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../stakeholder-portal/index.html#top">Portal Overview</a>
+          <a href="../stakeholder-portal/index.html#live-dashboard">Live Shuttle</a>
+          <a href="../stakeholder-portal/index.html#hub-availability">Hub Availability</a>
+          <a href="../stakeholder-portal/index.html#impact">Sustainability Impact</a>
+          <a href="../stakeholder-portal/index.html#pmis-dashboard">PMIS Dashboard</a>
+          <a href="../stakeholder-portal/index.html#feedback">Submit Feedback</a>
+          <a href="../stakeholder-portal/index.html#updates">Project Updates</a>
+        </div>
+      </div>
+      <div class="nav-item">
+        <a class="nav-link" href="../index.html#contact">CONTACT <i data-lucide="chevron-down" width="14" height="14"></i></a>
+        <div class="dropdown">
+          <a href="../index.html#contact">Company Contact</a>
+          <a href="../stakeholder-portal/index.html#feedback">Stakeholder Feedback</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-button" data-search-open aria-label="Search">
+        <i data-lucide="search" width="21" height="21"></i>
+      </button>
+      <a class="pill" href="../stakeholder-portal/index.html#top">
+        OPEN PORTAL
+        <span class="icon-round"><i data-lucide="arrow-up-right" width="16" height="16"></i></span>
+      </a>
+      <button class="icon-button menu-toggle" data-menu-toggle aria-label="Open menu">
+        <i data-lucide="menu" width="22" height="22"></i>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Our Services</p>
+        <h1>Integrated Mobility Consultancy Services</h1>
+        <p class="hero-subtitle">TerraNexus provides integrated project management services for sustainable transport infrastructure and smart campus mobility projects.</p>
+        <div class="service-tags" aria-label="Service focus areas">
+          <span class="service-tag">Strategy</span>
+          <span class="service-tag">Technical Delivery</span>
+          <span class="service-tag">Governance</span>
+          <span class="service-tag">Smart Monitoring</span>
+        </div>
+        <div class="breadcrumb">
+          <a href="../index.html#top">Home</a>
+          <span>/</span>
+          <span>Services</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="services-list" id="service-capabilities" aria-label="Service capabilities">
+      <div class="container">
+        <span class="service-anchor" id="sustainable-mobility" aria-hidden="true"></span>
+        <span class="service-anchor" id="technical-project-management" aria-hidden="true"></span>
+        <span class="service-anchor" id="governance-procurement" aria-hidden="true"></span>
+        <span class="service-anchor" id="implementation-monitoring" aria-hidden="true"></span>
+        <div class="capability-head">
+          <div>
+            <p class="eyebrow">Service Capabilities</p>
+            <h2 class="section-title">Service Capabilities</h2>
+          </div>
+          <p>Our services connect mobility strategy, technical delivery, governance control and digital monitoring into one implementation-ready consultancy model.</p>
+        </div>
+        <div class="tabbed-services">
+          <div class="service-tabs" role="tablist" aria-label="Service capability tabs">
+            <button class="service-tab active" type="button" role="tab" aria-selected="true" data-service="strategy">Mobility Strategy</button>
+            <button class="service-tab" type="button" role="tab" aria-selected="false" data-service="technical">Technical Delivery</button>
+            <button class="service-tab" type="button" role="tab" aria-selected="false" data-service="governance">Governance &amp; Procurement</button>
+            <button class="service-tab" type="button" role="tab" aria-selected="false" data-service="monitoring">Smart Monitoring</button>
+          </div>
+          <article class="service-stage" data-service-stage style="--service-image: url('../assets/services/terranexus_mobility_strategy_background_light_toned.jpg');">
+            <div class="service-stage-bg" aria-hidden="true"></div>
+            <div class="service-stage-content">
+              <h2 data-service-title>Sustainable Mobility Strategy and Planning</h2>
+              <p data-service-copy>We help clients translate transport problems into practical, low-carbon and user-centred mobility strategies.</p>
+              <ul class="service-bullets" data-service-bullets>
+                <li>Campus mobility strategy</li>
+                <li>Demand management</li>
+                <li>Active mobility planning</li>
+                <li>Low-emission transition</li>
+              </ul>
+              <a class="pill" data-service-cta href="../um-project/index.html#mobility-solution">
+                <span data-service-cta-label>View UM Mobility Solution</span>
+                <span class="icon-round"><i data-lucide="arrow-up-right" width="16" height="16"></i></span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="delivery-model" aria-label="Service delivery model">
+      <div class="container">
+        <div class="delivery-head">
+          <p class="eyebrow">Delivery Model</p>
+          <h2 class="section-title">Service Delivery Model</h2>
+          <p>TerraNexus applies a structured delivery model that connects diagnosis, design, implementation and continuous improvement.</p>
+        </div>
+        <div class="delivery-flow">
+          <article class="delivery-step">
+            <span class="step-number">01</span>
+            <h3>Diagnose</h3>
+            <p>Understand client needs, mobility demand, site constraints and stakeholder pain points.</p>
+          </article>
+          <article class="delivery-step">
+            <span class="step-number">02</span>
+            <h3>Design</h3>
+            <p>Develop practical mobility, governance, digital and commercial solutions.</p>
+          </article>
+          <article class="delivery-step">
+            <span class="step-number">03</span>
+            <h3>Deliver</h3>
+            <p>Manage implementation through phased delivery, PMIS monitoring and risk control.</p>
+          </article>
+          <article class="delivery-step">
+            <span class="step-number">04</span>
+            <h3>Monitor &amp; Improve</h3>
+            <p>Use dashboard data, feedback and performance tracking to refine long-term outcomes.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band">
+      <div class="container">
+        <div class="cta-copy">
+          <h2>Need a structured mobility delivery partner?</h2>
+          <p>Explore how TerraNexus applies its consultancy services to the UM Green Mobility Project.</p>
+        </div>
+        <div class="cta-actions">
+          <a class="pill" href="../um-project/index.html">
+            View UM Project
+            <span class="icon-round"><i data-lucide="arrow-up-right" width="16" height="16"></i></span>
+          </a>
+          <a class="pill secondary" href="../index.html#contact">
+            Contact TerraNexus
+            <span class="icon-round"><i data-lucide="mail" width="16" height="16"></i></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-top">
+      <div class="footer-brand">
+        <h3 class="footer-name">TerraNexus</h3>
+        <p>Smart Mobility. Sustainable Delivery.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <a href="../index.html#about">About Us</a>
+        <a href="index.html">Services</a>
+        <a href="../um-project/index.html">UM Project</a>
+        <a href="../stakeholder-portal/index.html#top">Stakeholder Portal</a>
+        <a href="../index.html#contact">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Location</h4>
+        <span>Kuala Lumpur</span>
+        <span>TerraNexus Project Office</span>
+        <span>Malaysia</span>
+      </div>
+      <div class="footer-col">
+        <h4>Phone Number</h4>
+        <a href="tel:+60120000000">+60 12 000 0000</a>
+      </div>
+      <div class="footer-col">
+        <h4>Email</h4>
+        <a href="mailto:hello@terranexus.my">hello@terranexus.my</a>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <a href="#">LinkedIn</a>
+        <a href="https://wa.me/60120000000">WhatsApp</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>&copy; 2026 TerraNexus. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <div class="overlay" data-search-overlay aria-hidden="true">
+    <div class="search-panel" role="dialog" aria-modal="true" aria-label="Search">
+      <button class="close-btn" data-close aria-label="Close search"><i data-lucide="x" width="18" height="18"></i></button>
+      <label for="search-input">Search</label>
+      <input id="search-input" type="search" placeholder="Type keyword">
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    const serviceData = {
+      strategy: {
+        title: "Sustainable Mobility Strategy and Planning",
+        copy: "We help clients translate transport problems into practical, low-carbon and user-centred mobility strategies.",
+        image: "../assets/services/terranexus_mobility_strategy_background_light_toned.jpg",
+        bullets: [
+          "Campus mobility strategy",
+          "Demand management",
+          "Active mobility planning",
+          "Low-emission transition"
+        ],
+        cta: "View UM Mobility Solution",
+        href: "../um-project/index.html#mobility-solution"
+      },
+      technical: {
+        title: "Technical Studies and Project Management",
+        copy: "We support project delivery through baseline studies, technical integration, phasing and implementation control.",
+        image: "../assets/services/stakeholder-engagement.webp",
+        bullets: [
+          "Feasibility and baseline studies",
+          "Implementation planning",
+          "Hybrid delivery support",
+          "Technical integration"
+        ],
+        cta: "View Project Management Framework",
+        href: "../um-project/index.html#project-management"
+      },
+      governance: {
+        title: "Governance, Procurement and Regulatory Advice",
+        copy: "We structure decision-making, procurement packaging and risk control for complex multi-system mobility projects.",
+        image: "../assets/services/terranexus_governance_procurement_background_recommended.jpg",
+        bullets: [
+          "Governance structure",
+          "Procurement packaging",
+          "Supplier coordination",
+          "Risk and compliance support"
+        ],
+        cta: "View Delivery Framework",
+        href: "../um-project/index.html#project-management"
+      },
+      monitoring: {
+        title: "Implementation Supervision and Smart Monitoring Support",
+        copy: "We use PMIS and dashboard-based reporting to support project control, sustainability tracking and stakeholder feedback.",
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1800&q=85",
+        bullets: [
+          "PMIS dashboard setup",
+          "Schedule and cost monitoring",
+          "Sustainability tracking",
+          "Stakeholder feedback integration"
+        ],
+        cta: "Open Stakeholder Portal",
+        href: "../stakeholder-portal/index.html#top"
+      }
+    };
+
+    const serviceHashMap = {
+      "#sustainable-mobility": "strategy",
+      "#technical-project-management": "technical",
+      "#governance-procurement": "governance",
+      "#implementation-monitoring": "monitoring"
+    };
+
+    const body = document.body;
+    const header = document.querySelector("[data-header]");
+    const nav = document.querySelector("[data-nav]");
+    const menuToggle = document.querySelector("[data-menu-toggle]");
+    const serviceStage = document.querySelector("[data-service-stage]");
+    const serviceTitle = document.querySelector("[data-service-title]");
+    const serviceCopy = document.querySelector("[data-service-copy]");
+    const serviceBullets = document.querySelector("[data-service-bullets]");
+    const serviceCta = document.querySelector("[data-service-cta]");
+    const serviceCtaLabel = document.querySelector("[data-service-cta-label]");
+
+    window.addEventListener("scroll", () => {
+      header.classList.toggle("scrolled", window.scrollY > 24);
+    });
+
+    menuToggle.addEventListener("click", () => {
+      nav.classList.toggle("open");
+      header.classList.toggle("menu-open", nav.classList.contains("open"));
+    });
+
+    function updateServicePanel(key) {
+      const data = serviceData[key];
+      if (!data || !serviceStage || !serviceTitle || !serviceCopy || !serviceBullets || !serviceCta || !serviceCtaLabel) return;
+      document.querySelectorAll("[data-service]").forEach((button) => {
+        const selected = button.dataset.service === key;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-selected", selected ? "true" : "false");
+      });
+      serviceStage.style.setProperty("--service-image", `url('${data.image}')`);
+      serviceTitle.textContent = data.title;
+      serviceCopy.textContent = data.copy;
+      serviceBullets.innerHTML = data.bullets.map((item) => `<li>${item}</li>`).join("");
+      serviceCta.href = data.href;
+      serviceCtaLabel.textContent = data.cta;
+    }
+
+    document.querySelectorAll("[data-service]").forEach((button) => {
+      button.addEventListener("click", () => updateServicePanel(button.dataset.service));
+    });
+
+    function syncServiceFromHash() {
+      const key = serviceHashMap[window.location.hash];
+      if (key) updateServicePanel(key);
+    }
+
+    window.addEventListener("hashchange", syncServiceFromHash);
+    syncServiceFromHash();
+
+    document.querySelector("[data-search-open]").addEventListener("click", () => {
+      const layer = document.querySelector("[data-search-overlay]");
+      openLayer(layer);
+      setTimeout(() => layer.querySelector("input").focus(), 80);
+    });
+
+    document.querySelectorAll("[data-close]").forEach((button) => {
+      button.addEventListener("click", () => closeLayer(button.closest(".overlay")));
+    });
+
+    document.querySelectorAll(".overlay").forEach((layer) => {
+      layer.addEventListener("click", (event) => {
+        if (event.target === layer) closeLayer(layer);
+      });
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        document.querySelectorAll(".overlay.active").forEach(closeLayer);
+      }
+    });
+
+    function openLayer(layer) {
+      layer.classList.add("active");
+      layer.setAttribute("aria-hidden", "false");
+      body.classList.add("locked");
+    }
+
+    function closeLayer(layer) {
+      if (!layer) return;
+      layer.classList.remove("active");
+      layer.setAttribute("aria-hidden", "true");
+      if (!document.querySelector(".overlay.active")) body.classList.remove("locked");
+    }
+
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
